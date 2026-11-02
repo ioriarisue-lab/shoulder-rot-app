@@ -16,330 +16,453 @@
 *{box-sizing:border-box}
 body{margin:0;font-family:system-ui,-apple-system,"Hiragino Sans","Noto Sans JP",sans-serif;background:var(--bg);color:var(--fg);line-height:1.5;
   padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
-header{padding:10px 16px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:8px}
-h1{font-size:17px;margin:0}
+header{padding:8px 12px 0;border-bottom:1px solid var(--line);background:var(--card);position:sticky;top:0;z-index:5}
+.hrow{display:flex;justify-content:space-between;align-items:center;gap:8px}
+h1{font-size:16px;margin:0}
 h2{font-size:14px;margin:0 0 8px;color:var(--sub);font-weight:600}
-main{max-width:1150px;margin:0 auto;padding:12px;display:grid;gap:12px;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr)}
-@media(max-width:820px){main{grid-template-columns:1fr}}
+nav{display:flex;gap:2px;margin-top:6px;overflow-x:auto}
+nav button{border:none;border-bottom:3px solid transparent;border-radius:0;background:none;padding:8px 12px;font-weight:600;color:var(--sub)}
+nav button.on{color:var(--acc);border-bottom-color:var(--acc);outline:none}
+.tab{display:none;max-width:1150px;margin:0 auto;padding:12px}
+.tab.on{display:block}
+.cols{display:grid;gap:12px;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr)}
+@media(max-width:820px){.cols{grid-template-columns:1fr}}
 .card{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:12px;margin-bottom:12px}
-button,select,.file,input[type=text],input[type=number]{font:inherit;font-size:14px;padding:7px 10px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--fg)}
+button,select,.file,input[type=text],input[type=number]{font:inherit;font-size:15px;padding:8px 11px;border-radius:8px;border:1px solid var(--line);background:var(--card);color:var(--fg)}
 button,.file{cursor:pointer}
-button.primary{background:var(--acc);border-color:var(--acc);color:#fff}
+button.primary{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600}
 button.rec{background:#c92a2a;border-color:#c92a2a;color:#fff;font-weight:600}
 button.on{outline:2px solid var(--acc);outline-offset:1px}
 button:disabled{opacity:.45;cursor:default}
 .file input{display:none}
 .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:8px}
+.seg{display:flex;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin-bottom:10px}
+.seg button{flex:1;border:none;border-radius:0;padding:10px 6px;font-weight:600;color:var(--sub);background:var(--card)}
+.seg button+button{border-left:1px solid var(--line)}
+.seg button.on{background:var(--acc);color:#fff;outline:none}
 #view{width:100%;background:#000;border-radius:8px;display:block;touch-action:manipulation;cursor:crosshair}
 #msg{font-size:13px;color:var(--sub);min-height:1.5em;margin-top:6px}
 .angle{display:flex;align-items:baseline;gap:10px}
-.big{font-size:46px;font-weight:700;font-variant-numeric:tabular-nums}
+.big{font-size:44px;font-weight:700;font-variant-numeric:tabular-nums}
 .dir{font-size:18px;font-weight:600}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .stat{border:1px solid var(--line);border-radius:8px;padding:6px 8px}
 .stat .k{font-size:12px;color:var(--sub)}
 .stat .v{font-size:19px;font-weight:600;font-variant-numeric:tabular-nums}
 .er{color:var(--er)} .ir{color:var(--ir)}
-#chart{width:100%;height:220px;display:block}
-.set{display:grid;grid-template-columns:auto 1fr auto;gap:6px 10px;align-items:center;font-size:13px}
+#chart{width:100%;height:200px;display:block}
+.set{display:grid;grid-template-columns:auto 1fr auto;gap:6px 10px;align-items:center;font-size:14px}
 .set input[type=range]{width:100%}
-.meta{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;align-items:center;font-size:13px}
-.meta input{width:100%}
-.meta input[type=checkbox]{width:auto;margin:0 4px 0 8px;vertical-align:-2px}
+.form{display:grid;grid-template-columns:7em 1fr;gap:10px 10px;align-items:center;font-size:15px}
+.form input[type=text],.form input[type=number],.form select{width:100%}
+.radio{display:flex;gap:16px}
+.radio label{display:flex;align-items:center;gap:6px}
+.req{color:#c92a2a;font-size:12px;margin-left:2px}
+.meta{display:grid;grid-template-columns:auto 1fr;gap:6px 10px;align-items:center;font-size:14px}
 .swatch{display:inline-block;width:14px;height:14px;border-radius:3px;border:1px solid var(--line);vertical-align:-2px;margin-left:4px}
+.subj{font-size:14px;font-weight:600;padding:8px 10px;border-radius:8px;background:rgba(37,99,235,.1);margin-bottom:10px}
+.fname{font-family:ui-monospace,Menlo,monospace;font-size:15px}
 details{font-size:13px} summary{cursor:pointer;font-weight:600}
 ol{padding-left:20px;margin:6px 0}
 .small{font-size:12px;color:var(--sub)}
 table{width:100%;border-collapse:collapse;font-size:12px}
 th,td{border-bottom:1px solid var(--line);padding:4px 3px;text-align:left;vertical-align:top}
-td button{font-size:12px;padding:3px 7px}
+td button{font-size:12px;padding:3px 7px;margin:1px 0}
 .countdown{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.45);color:#fff;font-size:120px;font-weight:800;z-index:9;pointer-events:none}
+[data-modes]{display:none}
+body.m-rt [data-modes~="rt"],body.m-rec [data-modes~="rec"],body.m-ana [data-modes~="ana"]{display:block}
+body.m-rt span[data-modes~="rt"],body.m-rec span[data-modes~="rec"],body.m-ana span[data-modes~="ana"]{display:inline}
+body.m-rt .row[data-modes~="rt"],body.m-rec .row[data-modes~="rec"],body.m-ana .row[data-modes~="ana"]{display:flex}
+#seek{width:100%}
+.recdot{color:#e03131;font-weight:700}
 </style>
 </head>
-<body>
-<header><h1>肩内外旋計測</h1><span class="small" id="ver"></span></header>
-<main>
-<section>
-  <div class="card">
-    <div class="row">
-      <button id="btnCam" class="primary">カメラ開始</button>
-      <button id="btnFlip">カメラ切替（今：<span id="facingLbl"></span>）</button>
-      <label class="file">動画を解析<input id="file" type="file" accept="video/*"></label>
-      <select id="rate" title="動画の再生速度">
-        <option value="1">1倍速</option><option value="0.5">0.5倍速</option><option value="0.25" selected>0.25倍速</option>
-      </select>
-      <button id="btnPlay" disabled>一時停止</button>
+<body class="m-rt">
+<header>
+  <div class="hrow"><h1>肩内外旋計測</h1><span class="small" id="ver"></span></div>
+  <nav>
+    <button data-tab="info" class="on">① 基本情報</button>
+    <button data-tab="meas">② 計測</button>
+    <button data-tab="data">③ 記録</button>
+    <button data-tab="conf">設定</button>
+  </nav>
+</header>
+
+<!-- ===== 基本情報 ===== -->
+<section class="tab on" id="tab-info">
+  <div class="card" style="max-width:560px">
+    <h2>基本情報</h2>
+    <div class="form">
+      <span>ID番号<span class="req">必須</span></span><input id="iId" type="text" inputmode="numeric" placeholder="例：12">
+      <span>回数<span class="req">必須</span></span><input id="iTrial" type="number" min="1" value="1">
+      <span>性別<span class="req">必須</span></span><span class="radio"><label><input type="radio" name="iSex" value="M"> 男</label><label><input type="radio" name="iSex" value="W"> 女</label></span>
+      <span>年齢</span><input id="iAge" type="number" min="0" max="120" placeholder="例：21">
+      <span>測定側</span><select id="iSide"><option value="右">右</option><option value="左">左</option></select>
+      <span>条件</span><input id="iCond" type="text" placeholder="例：圧迫なし／圧迫あり">
+      <span>メモ</span><input id="iNote" type="text">
     </div>
-    <canvas id="view" width="640" height="360"></canvas>
-    <div id="msg">「カメラ開始」を押してください。</div>
-    <div class="row" style="margin-top:8px">
-      <button id="pick0">① 肘頭マーカー<span class="swatch" id="sw0"></span></button>
-      <button id="pick1">② 尺骨マーカー<span class="swatch" id="sw1"></span></button>
-      <button id="btnZero">③ 0°に設定</button>
-      <button id="btnSign">外旋の向きを反転</button>
-    </div>
-    <div class="row">
-      <button id="btnRec" class="rec">記録開始</button>
-      <button id="btnReset">最大値・回数リセット</button>
-      <span class="small" id="fps"></span>
-    </div>
-  </div>
-  <div class="card">
-    <h2>グラフ（直近10秒）</h2>
-    <canvas id="chart"></canvas>
+    <p>保存するファイル名：<span class="fname" id="fnPreview">—</span></p>
+    <p class="small">回数は、記録を保存するたびに1つ増えます（動画の解析では増えません）。</p>
+    <button id="btnGo" class="primary" style="width:100%">計測へ進む</button>
+    <div class="small" id="infoMsg" style="margin-top:6px;color:#c92a2a"></div>
   </div>
 </section>
-<section>
-  <div class="card">
-    <h2>現在値（＋＝外旋、−＝内旋）</h2>
-    <div class="angle"><span class="big" id="ang">—</span><span class="dir" id="dir"></span></div>
-    <div class="stat" style="margin-top:6px"><div class="k">角速度</div><div class="v" id="vel">—</div></div>
+
+<!-- ===== 計測 ===== -->
+<section class="tab" id="tab-meas">
+  <div class="subj" id="subjLine">—</div>
+  <div class="seg" id="modeSeg">
+    <button data-mode="rt" class="on">リアルタイム計測</button>
+    <button data-mode="rec">撮影のみ</button>
+    <button data-mode="ana">動画を解析</button>
   </div>
-  <div class="card">
-    <h2>最大値・回数（リセット/記録開始から）</h2>
-    <div class="grid">
-      <div class="stat"><div class="k">最大外旋角度</div><div class="v er" id="maxER">—</div></div>
-      <div class="stat"><div class="k">最大内旋角度</div><div class="v ir" id="maxIR">—</div></div>
-      <div class="stat"><div class="k">外旋方向の最大角速度</div><div class="v er" id="pvER">—</div></div>
-      <div class="stat"><div class="k">内旋方向の最大角速度</div><div class="v ir" id="pvIR">—</div></div>
-      <div class="stat"><div class="k">可動範囲（外旋＋内旋）</div><div class="v" id="rom">—</div></div>
-      <div class="stat"><div class="k">回数</div><div class="v" id="reps">0</div></div>
+  <div class="cols">
+  <div>
+    <div class="card">
+      <div class="row" data-modes="rt rec">
+        <button id="btnCam" class="primary">カメラ開始</button>
+        <button id="btnFlip">カメラ切替（今：<span id="facingLbl"></span>）</button>
+      </div>
+      <div class="row" data-modes="ana">
+        <label class="file">動画ファイルを選ぶ<input id="file" type="file" accept="video/*"></label>
+        <select id="rate" title="解析の再生速度"><option value="1">1倍速</option><option value="0.5">0.5倍速</option><option value="0.25" selected>0.25倍速</option></select>
+        <button id="btnPlay" disabled>再生</button>
+      </div>
+      <canvas id="view" width="640" height="360"></canvas>
+      <div data-modes="ana"><input id="seek" type="range" min="0" max="1" step="0.001" value="0" disabled><div class="small" id="seekLbl"></div></div>
+      <div id="msg">「カメラ開始」を押してください。</div>
+      <div class="row" style="margin-top:8px" data-modes="rt ana">
+        <button id="pick0">① 肘頭マーカー<span class="swatch" id="sw0"></span></button>
+        <button id="pick1">② 尺骨マーカー<span class="swatch" id="sw1"></span></button>
+        <button id="btnZero">③ 0°に設定</button>
+        <button id="btnSign">外旋の向きを反転</button>
+      </div>
+      <div class="small" id="fps"></div>
+    </div>
+    <div class="card" data-modes="rt ana">
+      <h2>グラフ（直近10秒）</h2>
+      <canvas id="chart"></canvas>
     </div>
   </div>
-  <div class="card">
-    <h2>速さテスト</h2>
-    <div class="meta">
-      <span>方式</span><select id="tMode"><option value="count">回数を決めて時間を測る</option><option value="time">時間を決めて回数を数える</option></select>
-      <span id="tTargetLbl">回数</span><span><input id="tTarget" type="number" min="1" value="10" style="width:90px"> <span id="tUnit">回</span></span>
-      <span>外旋の目標</span><span><input id="tER" type="number" min="5" max="90" value="45" style="width:90px"> °まで外旋</span>
-      <span>戻りの判定</span><span><input id="tBack" type="number" min="-60" max="40" value="0" style="width:90px"> °まで戻ったら1回</span>
+  <div>
+    <!-- 撮影のみ -->
+    <div class="card" data-modes="rec">
+      <h2>撮影</h2>
+      <div class="meta">
+        <span>撮影時間</span><select id="recDur"><option value="0">手動で停止</option><option value="10">合図から10秒</option><option value="15">合図から15秒</option><option value="20">合図から20秒</option><option value="30">合図から30秒</option><option value="60">合図から60秒</option></select>
+      </div>
+      <div class="row" style="margin-top:10px"><button id="btnVRec" class="rec" style="flex:1">撮影開始</button></div>
+      <div class="big" style="font-size:30px" id="vrecTime"></div>
+      <p class="small">撮影中は解析をしないので、フレームレートを高く保てます。撮影を始めると3秒カウントのあと高いブザーが鳴り、その時刻（合図）を記録します。カウント中は前腕中間位で止めておいてください。解析ではこの静止区間から0°を自動で決め、合図からテストを始めます。</p>
+      <div id="vrecDone"></div>
     </div>
-    <div class="row" style="margin-top:8px"><button id="btnTest" class="rec">テスト開始</button><span class="small">3秒カウントのあと、高いブザーで開始</span></div>
-    <div id="tLive" class="big" style="font-size:34px"></div>
-    <div id="tResult"></div>
-    <p class="small">1回＝外旋の目標角度に達したあと、戻りの判定角度まで戻るまで。目標に届かなかった往復は数えません。時間はブザーから計ります。</p>
+    <!-- 現在値 -->
+    <div class="card" data-modes="rt ana">
+      <h2>現在値（＋＝外旋、−＝内旋）</h2>
+      <div class="angle"><span class="big" id="ang">—</span><span class="dir" id="dir"></span></div>
+      <div class="stat" style="margin-top:6px"><div class="k">角速度</div><div class="v" id="vel">—</div></div>
+    </div>
+    <!-- 速さテスト -->
+    <div class="card" data-modes="rt ana">
+      <h2>速さテスト</h2>
+      <div class="meta">
+        <span>方式</span><select id="tMode"><option value="count">回数を決めて時間を測る</option><option value="time">時間を決めて回数を数える</option></select>
+        <span id="tTargetLbl">回数</span><span><input id="tTarget" type="number" min="1" value="10" style="width:90px"> <span id="tUnit">回</span></span>
+        <span>外旋の目標</span><span><input id="tER" type="number" min="5" max="90" value="45" style="width:90px"> °まで外旋</span>
+        <span>戻りの判定</span><span><input id="tBack" type="number" min="-60" max="40" value="0" style="width:90px"> °まで戻ったら1回</span>
+      </div>
+      <div class="row" style="margin-top:10px">
+        <button id="btnTest" class="rec" style="flex:1">テスト開始</button>
+        <button id="btnAuto" class="primary" data-modes="ana" style="flex:1">合図から自動解析</button>
+      </div>
+      <div id="tLive" class="big" style="font-size:34px"></div>
+      <div id="tResult"></div>
+      <p class="small" data-modes="rt">3秒カウントのあと高いブザーで開始。1回＝外旋の目標に達してから戻りの判定まで戻るまで。目標に届かない往復は数えません。</p>
+      <p class="small" data-modes="ana">アプリで撮影した動画は「合図から自動解析」で、0°設定とテスト開始を自動で行います。ほかの動画は、静止した中間位で一時停止して「③ 0°に設定」を押し、開始の位置で「テスト開始」を押します。</p>
+    </div>
+    <div class="card" data-modes="rt ana">
+      <h2>最大値・回数（自由記録）</h2>
+      <div class="grid">
+        <div class="stat"><div class="k">最大外旋角度</div><div class="v er" id="maxER">—</div></div>
+        <div class="stat"><div class="k">最大内旋角度</div><div class="v ir" id="maxIR">—</div></div>
+        <div class="stat"><div class="k">外旋方向の最大角速度</div><div class="v er" id="pvER">—</div></div>
+        <div class="stat"><div class="k">内旋方向の最大角速度</div><div class="v ir" id="pvIR">—</div></div>
+        <div class="stat"><div class="k">可動範囲（外旋＋内旋）</div><div class="v" id="rom">—</div></div>
+        <div class="stat"><div class="k">回数</div><div class="v" id="reps">0</div></div>
+      </div>
+      <div class="row" style="margin-top:10px"><button id="btnRec">自由記録 開始</button><button id="btnReset">リセット</button></div>
+    </div>
+  </div>
+  </div>
+</section>
+
+<!-- ===== 記録 ===== -->
+<section class="tab" id="tab-data">
+  <div class="card">
+    <h2>計測結果（この端末内）</h2>
+    <div class="row"><button id="btnExportSum">一覧をCSVで書き出し</button><button id="btnExportAll">全記録の時系列をCSVで書き出し</button></div>
+    <div style="overflow-x:auto"><table><thead><tr><th>日時</th><th>ファイル名 / 基本情報</th><th>結果</th><th></th></tr></thead><tbody id="hist"></tbody></table></div>
   </div>
   <div class="card">
-    <h2>記録情報（CSVに入ります）</h2>
-    <div class="meta">
-      <span>対象者ID</span><input id="mSubj" type="text" placeholder="例：S01">
-      <span>測定側</span><select id="mSide"><option value="右">右</option><option value="左">左</option></select>
-      <span>条件</span><input id="mCond" type="text" placeholder="例：圧迫なし／圧迫あり">
-      <span>試行</span><input id="mTrial" type="number" min="1" value="1">
-      <span>メモ</span><input id="mNote" type="text">
-      <span>記録時間</span><span><select id="mDur"><option value="0">手動で停止</option><option value="5">5秒</option><option value="10">10秒</option><option value="15">15秒</option><option value="20">20秒</option><option value="30">30秒</option><option value="60">60秒</option></select>
-        <label class="small"><input id="mCount" type="checkbox" checked> 開始前に3秒カウント</label></span>
-    </div>
-    <p class="small">記録を停止すると、この端末の中に自動で保存されます。試行番号は保存のたびに1つ増えます。</p>
-  </div>
-  <div class="card">
-    <h2>保存した記録（この端末内）</h2>
-    <div class="row">
-      <button id="btnExportSum">一覧をCSVで書き出し</button>
-      <button id="btnExportAll">全記録の時系列をCSVで書き出し</button>
-    </div>
-    <div style="overflow-x:auto"><table><thead><tr><th>日時</th><th>ID / 条件 / 試行</th><th>外旋</th><th>内旋</th><th>角速度 外/内</th><th>回数</th><th></th></tr></thead><tbody id="hist"></tbody></table></div>
+    <h2>撮影した動画（この端末内）</h2>
+    <div style="overflow-x:auto"><table><thead><tr><th>日時</th><th>ファイル名 / 基本情報</th><th>長さ</th><th></th></tr></thead><tbody id="vhist"></tbody></table></div>
     <p class="small" id="storeInfo"></p>
+    <p class="small">データはこの端末の中だけに保存され、外部には送信しません。アプリを削除すると消えるので、必要なものは書き出してください。</p>
   </div>
-  <div class="card">
+</section>
+
+<!-- ===== 設定 ===== -->
+<section class="tab" id="tab-conf">
+  <div class="card" style="max-width:640px">
     <h2>設定</h2>
     <div class="set">
       <span>色の許容幅</span><input id="tolH" type="range" min="4" max="40" value="14"><span id="tolHv"></span>
       <span>平滑化</span><input id="smooth" type="range" min="0" max="0.9" step="0.05" value="0.2"><span id="smoothv"></span>
-      <span>回数：外旋判定</span><input id="thER" type="range" min="5" max="90" value="30"><span id="thERv"></span>
-      <span>回数：戻り判定</span><input id="thBack" type="range" min="-60" max="30" value="5"><span id="thBackv"></span>
+      <span>自由記録：外旋判定</span><input id="thER" type="range" min="5" max="90" value="30"><span id="thERv"></span>
+      <span>自由記録：戻り判定</span><input id="thBack" type="range" min="-60" max="30" value="5"><span id="thBackv"></span>
     </div>
-    <p class="small">回数は「外旋判定」の角度を超えたら1回、「戻り判定」より戻ったら次をカウントできる状態に戻ります。設定は端末に記憶されます。</p>
+    <p class="small">平滑化は速い動きでは0.2以下がおすすめです（大きいと最大角速度が低く出ます）。設定は端末に記憶されます。</p>
   </div>
-  <div class="card">
-    <details>
+  <div class="card" style="max-width:640px">
+    <details open>
       <summary>使い方</summary>
       <ol>
         <li>座位、肩関節屈曲伸展0°・外内転0°、肘関節90°屈曲。</li>
-        <li>色の違う丸シール（例：緑とピンク）を<b>肘頭</b>と<b>尺骨</b>（尺骨茎状突起付近の下面）に貼る。</li>
-        <li>スマホを前腕の<b>真下</b>に、画面を上に向けて置く（台や箱で高さを調整）。画面が上向きのときは「カメラ切替」で前面カメラにする。肘頭が画面の中央付近、外旋・内旋しても尺骨マーカーが画面から出ない位置に。</li>
-        <li>①②を押して、画面上のシールをタップして色を登録。</li>
-        <li>前腕中間位（前腕が正面を向く位置）で「③ 0°に設定」。</li>
-        <li>外旋して「外旋」と表示されないときは「外旋の向きを反転」。</li>
-        <li>記録情報を入れて「記録開始」。停止すると端末に保存される。</li>
-        <li>CSVは「保存した記録」から書き出す。iPhoneでは共有画面から「"ファイル"に保存」を選ぶ。</li>
+        <li>色の違う丸シール（直径2cm程度、例：緑とピンク）を<b>肘頭</b>と<b>尺骨</b>（尺骨茎状突起付近の下面）に貼る。</li>
+        <li>スマホを前腕の<b>真下</b>に置く。画面を上に向けるなら前面カメラ、台に固定して背面カメラを上に向けるなら背面カメラ（背面のほうが高いフレームレートが出やすい）。明るい場所で。</li>
+        <li>「① 基本情報」を入れて「計測へ進む」。</li>
+        <li><b>リアルタイム計測</b>：①②でシールをタップして色を登録 → 中間位で「③ 0°に設定」→「テスト開始」。</li>
+        <li><b>撮影のみ</b>：「撮影開始」→ 3秒カウント中は中間位で静止 → ブザーで運動開始 → 終わったら「撮影停止」。動画は端末内に残り、「動画を端末に保存」でファイルにもできる。</li>
+        <li><b>動画を解析</b>：「③ 記録」の動画一覧で「解析」を押す（またはファイルを選ぶ）→ 最初のコマでシールの色を登録 →「合図から自動解析」。</li>
+        <li>結果はCSVで書き出す。iPhoneでは共有画面から「"ファイル"に保存」を選ぶ。</li>
       </ol>
-      <p class="small">角度は「肘頭→尺骨マーカー」を結ぶ線の向きの、中間位からの回転角です。肘頭は内外旋の回転軸（上腕骨長軸）の真下にあるので、そのまま回転中心になります。角速度はフレームごとの角度変化から計算し、精度はフレームレートに左右されます（60fps推奨）。CSVには平滑化前の角度も入ります。</p>
-      <p class="small">データはこの端末の中だけに保存され、外部には送信されません。アプリを削除すると記録も消えるので、必要な記録はCSVで書き出してください。</p>
+      <p class="small">角度は「肘頭→尺骨マーカー」を結ぶ線の向きの、中間位からの回転角です。ファイル名は「ID＋ID番号_回数_性別（男M／女W）」です。</p>
     </details>
   </div>
 </section>
-</main>
+
 <div class="countdown" id="cd"></div>
 <video id="video" playsinline muted style="display:none"></video>
 <script>
-const APP_VERSION='1.1.1';
+const APP_VERSION='2.0.0';
 const $=id=>document.getElementById(id);
 $('ver').textContent='v'+APP_VERSION;
 const video=$('video'), view=$('view'), vctx=view.getContext('2d');
 const work=document.createElement('canvas'), wctx=work.getContext('2d',{willReadFrequently:true});
-let W=0,H=0,img=null,stream=null,source=null,loopToken=0,wakeLock=null;
+let W=0,H=0,img=null,stream=null,source=null,loopToken=0,wakeLock=null,mode='rt';
 let facing='user';
 const markers=[{name:'肘頭',col:null,pos:null,found:false,lost:99,draw:'#00e5ff'},{name:'尺骨',col:null,pos:null,found:false,lost:99,draw:'#ffd400'}];
 let pickMode=-1, zero=null, sign=1;
 let sm=null, vel=0, prevT=null, lastT=null, lastRaw=[];
-let stats, armed=true, recording=false, rows=[], recT0=null, recStartWall=null, buf=[], durTimer=null;
+let stats, armed=true, recording=false, rows=[], recT0=null, recStartWall=null, buf=[];
+let test=null, auto=null, actx=null, curVideo=null, anaInfo=null;
 let fpsN=0, fpsT=performance.now();
-let test=null, actx=null;
 resetStats();
-function beep(f=880,ms=150){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();
-  const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=f;g.gain.value=0.25;o.connect(g);g.connect(actx.destination);
-  o.start();o.stop(actx.currentTime+ms/1000);}catch(e){}}
 
 const msg=t=>$('msg').textContent=t;
 const wrap=a=>((a+180)%360+360)%360-180;
 const fmt=(v,d=1)=>v==null||!isFinite(v)?'—':v.toFixed(d);
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+const mean=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:null;
+const sd=a=>{if(a.length<2)return null;const m=mean(a);return Math.sqrt(a.reduce((x,y)=>x+(y-m)**2,0)/(a.length-1));};
+const circMean=a=>{let s=0,c=0;a.forEach(x=>{s+=Math.sin(x*Math.PI/180);c+=Math.cos(x*Math.PI/180);});return Math.atan2(s,c)*180/Math.PI;};
 function resetStats(){stats={maxER:null,maxIR:null,pvER:null,pvIR:null,reps:0};armed=true;}
+function beep(f=880,ms=150){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();
+  const o=actx.createOscillator(),g=actx.createGain();o.frequency.value=f;g.gain.value=0.25;o.connect(g);g.connect(actx.destination);
+  o.start();o.stop(actx.currentTime+ms/1000);}catch(e){}}
+async function unlockAudio(){try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();await actx.resume();}catch(e){}}
 
 // ---------- 設定の記憶 ----------
 const LS='shoulderRotApp.settings';
+const SET_KEYS=['tolH','smooth','thER','thBack','tMode','tTarget','tER','tBack','recDur','rate','iSide','iCond','iAge','iId','iTrial'];
 function loadSettings(){
   try{const s=JSON.parse(localStorage.getItem(LS)||'{}');
-    ['tolH','smooth','thER','thBack','mSide','mDur','tMode','tTarget','tER','tBack'].forEach(k=>{if(s[k]!=null)$(k).value=s[k];});
-    if(s.mCount!=null)$('mCount').checked=s.mCount;
+    SET_KEYS.forEach(k=>{if(s[k]!=null)$(k).value=s[k];});
+    if(s.iSex)document.querySelectorAll('input[name=iSex]').forEach(r=>r.checked=r.value===s.iSex);
     if(s.facing)facing=s.facing; if(s.sign)sign=s.sign;
     markers.forEach((m,i)=>{if(s['col'+i]){m.col=s['col'+i];$('sw'+i).style.background=s['rgb'+i];}});
   }catch(e){}
 }
 function saveSettings(){
-  try{const s={};['tolH','smooth','thER','thBack','mSide','mDur','tMode','tTarget','tER','tBack'].forEach(k=>s[k]=$(k).value);
-    s.mCount=$('mCount').checked; s.facing=facing; s.sign=sign;
+  try{const s={};SET_KEYS.forEach(k=>s[k]=$(k).value);
+    s.iSex=sexVal(); s.facing=facing; s.sign=sign;
     markers.forEach((m,i)=>{if(m.col){s['col'+i]=m.col;s['rgb'+i]=$('sw'+i).style.background;}});
     localStorage.setItem(LS,JSON.stringify(s));}catch(e){}
 }
-loadSettings();
-$('facingLbl').textContent=facing==='user'?'前面':'背面';
+
+// ---------- 基本情報 ----------
+const sexVal=()=>{const r=document.querySelector('input[name=iSex]:checked');return r?r.value:'';};
+const safeId=s=>String(s||'').trim().replace(/[^A-Za-z0-9-]+/g,'');
+function getInfo(){return {id:$('iId').value.trim(),trial:Math.max(1,parseInt($('iTrial').value)||1),sex:sexVal(),age:$('iAge').value.trim(),
+  side:$('iSide').value,condition:$('iCond').value.trim(),note:$('iNote').value.trim()};}
+function setInfo(i){ if(!i)return;
+  $('iId').value=i.id??''; $('iTrial').value=i.trial??1; $('iAge').value=i.age??''; $('iSide').value=i.side||'右';
+  $('iCond').value=i.condition??''; $('iNote').value=i.note??'';
+  document.querySelectorAll('input[name=iSex]').forEach(r=>r.checked=r.value===i.sex); updInfo(); }
+const baseName=i=>`ID${safeId(i.id)}_${i.trial}_${i.sex}`;
+const sexJa=s=>s==='M'?'男':s==='W'?'女':'—';
+function infoProblems(i){const p=[];if(!safeId(i.id))p.push('ID番号（英数字）');if(!i.sex)p.push('性別');return p;}
+function updInfo(){
+  const i=getInfo(), p=infoProblems(i);
+  $('fnPreview').textContent=p.length?'—':baseName(i)+'.csv';
+  updSubj(); saveSettings();
+}
+const subjText=i=>`${baseName(i)}　｜ ID ${i.id}・${i.trial}回目・${sexJa(i.sex)}${i.age?'・'+i.age+'歳':''}・${i.side}${i.condition?'・'+i.condition:''}`;
+function updSubj(){
+  if(mode==='ana'&&anaInfo){$('subjLine').textContent='解析する動画：'+subjText(anaInfo);return;}
+  const i=getInfo(); $('subjLine').textContent=infoProblems(i).length?'基本情報が未入力です（① 基本情報）':subjText(i);
+}
+['iId','iTrial','iAge','iSide','iCond','iNote'].forEach(id=>$(id).addEventListener('input',updInfo));
+document.querySelectorAll('input[name=iSex]').forEach(r=>r.addEventListener('change',updInfo));
+$('btnGo').onclick=()=>{const p=infoProblems(getInfo());
+  if(p.length){$('infoMsg').textContent=p.join('、')+'を入れてください。';return;}
+  $('infoMsg').textContent=''; showTab('meas');};
+function requireInfo(){const p=infoProblems(mode==='ana'&&anaInfo?anaInfo:getInfo());if(p.length){msg('先に基本情報（'+p.join('、')+'）を入れてください。');return false;}return true;}
+
+// ---------- タブ・モード ----------
+function showTab(t){document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.tab===t));
+  document.querySelectorAll('.tab').forEach(s=>s.classList.toggle('on',s.id==='tab-'+t));
+  if(t==='data')renderHist(); if(t==='meas')requestAnimationFrame(drawChart); window.scrollTo(0,0);}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>showTab(b.dataset.tab));
+function setMode(m){
+  if(recording||test||vrec){msg('記録・撮影中は切り替えられません。');return;}
+  if(m===mode)return;
+  mode=m; document.body.className='m-'+m;
+  document.querySelectorAll('#modeSeg button').forEach(b=>b.classList.toggle('on',b.dataset.mode===m));
+  stopSource(); clearView(); auto=null; anaInfo=null; curVideo=null; updSubj();
+  msg(m==='ana'?'「③ 記録」の動画一覧で「解析」を押すか、動画ファイルを選んでください。':'「カメラ開始」を押してください。');
+}
+document.querySelectorAll('#modeSeg button').forEach(b=>b.onclick=()=>setMode(b.dataset.mode));
+function clearView(){vctx.fillStyle='#000';vctx.fillRect(0,0,view.width,view.height);}
 
 // ---------- 端末内データベース ----------
 let db=null;
-function openDB(){return new Promise((res,rej)=>{const r=indexedDB.open('shoulderRotApp',1);
-  r.onupgradeneeded=()=>{r.result.createObjectStore('sessions',{keyPath:'id',autoIncrement:true});};
+function openDB(){return new Promise((res,rej)=>{const r=indexedDB.open('shoulderRotApp',2);
+  r.onupgradeneeded=()=>{const d=r.result;
+    if(!d.objectStoreNames.contains('sessions'))d.createObjectStore('sessions',{keyPath:'id',autoIncrement:true});
+    if(!d.objectStoreNames.contains('videos'))d.createObjectStore('videos',{keyPath:'id',autoIncrement:true});};
   r.onsuccess=()=>res(r.result); r.onerror=()=>rej(r.error);});}
-function tx(mode){return db.transaction('sessions',mode).objectStore('sessions');}
-const dbAdd=o=>new Promise((res,rej)=>{const r=tx('readwrite').add(o);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);});
-const dbAll=()=>new Promise((res,rej)=>{const r=tx('readonly').getAll();r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);});
-const dbGet=id=>new Promise((res,rej)=>{const r=tx('readonly').get(id);r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);});
-const dbDel=id=>new Promise((res,rej)=>{const r=tx('readwrite').delete(id);r.onsuccess=()=>res();r.onerror=()=>rej(r.error);});
-
+const st=(n,m)=>db.transaction(n,m).objectStore(n);
+const req=r=>new Promise((res,rej)=>{r.onsuccess=()=>res(r.result);r.onerror=()=>rej(r.error);});
+const dbAdd=(n,o)=>req(st(n,'readwrite').add(o));
+const dbAll=n=>req(st(n,'readonly').getAll());
+const dbGet=(n,id)=>req(st(n,'readonly').get(id));
+const dbDel=(n,id)=>req(st(n,'readwrite').delete(id));
 async function initStorage(){
   try{db=await openDB();}catch(e){$('storeInfo').textContent='端末内保存を使えません（プライベートブラウズでは保存できないことがあります）。';return;}
   try{if(navigator.storage?.persist)await navigator.storage.persist();}catch(e){}
-  renderHist();
 }
 const pad2=n=>String(n).padStart(2,'0');
-const dstr=d=>`${d.getFullYear()}/${pad2(d.getMonth()+1)}/${pad2(d.getDate())} ${pad2(d.getHours())}:${pad2(d.getMinutes())}:${pad2(d.getSeconds())}`;
+const dstr=d=>`${d.getFullYear()}/${pad2(d.getMonth()+1)}/${pad2(d.getDate())} ${pad2(d.getHours())}:${pad2(d.getMinutes())}`;
 const fstamp=d=>`${d.getFullYear()}${pad2(d.getMonth()+1)}${pad2(d.getDate())}_${pad2(d.getHours())}${pad2(d.getMinutes())}${pad2(d.getSeconds())}`;
 const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const infoCell=i=>`<b class="fname">${esc(baseName(i))}</b><br>${esc(sexJa(i.sex))}${i.age?'・'+esc(i.age)+'歳':''}・${esc(i.side)}${i.condition?'・'+esc(i.condition):''}`;
 async function renderHist(){
   if(!db)return;
-  const all=(await dbAll()).sort((a,b)=>b.id-a.id);
-  $('hist').innerHTML=all.length?all.map(s=>`<tr><td>${esc(dstr(new Date(s.date)))}</td><td>${esc(s.subject||'—')} / ${esc(s.condition||'—')} / ${esc(s.trial)}${s.side?'（'+esc(s.side)+'）':''}${s.test?`<br><b>速さテスト：${s.test.count}回 / ${fmt(s.test.totalTime,2)}秒${s.test.completed?'':'（'+esc(s.test.reason)+'）'}</b>`:''}</td>
-    <td>${fmt(s.summary.maxER)}°</td><td>${fmt(s.summary.maxIR)}°</td><td>${fmt(s.summary.pvER,0)} / ${fmt(s.summary.pvIR,0)}</td><td>${s.summary.reps}</td>
-    <td><button data-csv="${s.id}">CSV</button> <button data-del="${s.id}">削除</button></td></tr>`).join('')
-    :'<tr><td colspan="7" class="small">まだ記録はありません。</td></tr>';
-  let info=`${all.length}件の記録`;
+  const all=(await dbAll('sessions')).sort((a,b)=>b.id-a.id);
+  $('hist').innerHTML=all.length?all.map(s=>{const T=s.test,S=s.summary;
+    const res=T?`<b>速さテスト ${T.count}回 / ${fmt(T.totalTime,2)}秒</b>${T.completed?'':'（'+esc(T.reason)+'）'}<br>外旋 ${fmt(T.summary.meanPvER,0)}°/s・内旋 ${fmt(T.summary.meanPvIR,0)}°/s`
+      :`自由記録 外旋${fmt(S.maxER)}°・内旋${fmt(S.maxIR)}°<br>${fmt(S.pvER,0)} / ${fmt(S.pvIR,0)}°/s・${S.reps}回`;
+    return `<tr><td>${esc(dstr(new Date(s.date)))}<br><span class="small">${s.source==='video'?'動画解析':'リアルタイム'}</span></td><td>${infoCell(s.info)}</td><td>${res}</td>
+    <td><button data-csv="${s.id}">CSV</button><br><button data-del="${s.id}">削除</button></td></tr>`;}).join('')
+    :'<tr><td colspan="4" class="small">まだ記録はありません。</td></tr>';
+  const vids=(await dbAll('videos')).sort((a,b)=>b.id-a.id);
+  $('vhist').innerHTML=vids.length?vids.map(v=>`<tr><td>${esc(dstr(new Date(v.date)))}</td><td>${infoCell(v.info)}</td><td>${fmt(v.duration,1)}秒<br><span class="small">${(v.blob.size/1048576).toFixed(1)}MB</span></td>
+    <td><button data-ana="${v.id}" class="primary">解析</button><br><button data-vsave="${v.id}">端末に保存</button><br><button data-vdel="${v.id}">削除</button></td></tr>`).join('')
+    :'<tr><td colspan="4" class="small">まだ動画はありません。</td></tr>';
+  let info=`結果 ${all.length}件・動画 ${vids.length}件`;
   try{if(navigator.storage?.estimate){const e=await navigator.storage.estimate();info+=` / 使用量 ${(e.usage/1048576).toFixed(1)}MB`;}}catch(e){}
   $('storeInfo').textContent=info;
 }
-$('hist').addEventListener('click',async e=>{
-  const c=e.target.dataset.csv, d=e.target.dataset.del;
-  if(c){const s=await dbGet(+c); await saveFile(sessionFileName(s),sessionCSV(s));}
-  if(d){ if(e.target.dataset.confirm){await dbDel(+d);renderHist();msg('記録を削除しました。');}
-    else{e.target.dataset.confirm='1';e.target.textContent='本当に削除';setTimeout(()=>{if(e.target.isConnected){delete e.target.dataset.confirm;e.target.textContent='削除';}},3000);} }
+function confirmBtn(b,fn){ if(b.dataset.confirm){fn();} else {b.dataset.confirm='1';const t=b.textContent;b.textContent='本当に削除';
+  setTimeout(()=>{if(b.isConnected){delete b.dataset.confirm;b.textContent=t;}},3000);} }
+$('hist').addEventListener('click',async e=>{const b=e.target,d=b.dataset;
+  if(d.csv){const s=await dbGet('sessions',+d.csv); await saveFile(baseName(s.info)+'.csv',new Blob([sessionCSV(s)],{type:'text/csv'}));}
+  if(d.del)confirmBtn(b,async()=>{await dbDel('sessions',+d.del);renderHist();});
+});
+$('vhist').addEventListener('click',async e=>{const b=e.target,d=b.dataset;
+  if(d.ana){const v=await dbGet('videos',+d.ana); showTab('meas'); setMode('ana'); loadVideo(v.blob,v);}
+  if(d.vsave){const v=await dbGet('videos',+d.vsave); await saveFile(baseName(v.info)+'.'+v.ext,v.blob);}
+  if(d.vdel)confirmBtn(b,async()=>{await dbDel('videos',+d.vdel);renderHist();});
 });
 
-// ---------- CSV ----------
-const csvq=v=>{v=String(v??'');return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
-const COLS='time_s,olecranon_x,olecranon_y,ulna_x,ulna_y,angle_raw_deg,angle_smooth_deg,velocity_deg_s';
-function sessionHeader(s){
-  const S=s.summary;
-  return [['対象者ID',s.subject],['測定側',s.side],['条件',s.condition],['試行',s.trial],['メモ',s.note],['日時',dstr(new Date(s.date))],
-    ['最大外旋角度_deg',fmt(S.maxER)],['最大内旋角度_deg',fmt(S.maxIR)],['可動範囲_deg',fmt(S.rom)],['外旋方向最大角速度_deg_s',fmt(S.pvER,0)],['内旋方向最大角速度_deg_s',fmt(S.pvIR,0)],['回数',S.reps],
-    ['記録時間_s',fmt(S.duration,2)],['平均フレームレート_fps',fmt(S.fps,1)],['平滑化',s.settings.smooth],['0度基準_画像上の角度',fmt(s.settings.zero,2)],['向き',s.settings.sign],['アプリ版',s.version]]
-    .map(r=>r.map(csvq).join(','));
-}
-const REPCOLS='rep,start_s,end_s,duration_s,time_to_target_s,max_ER_deg,peak_vel_ER_deg_s,peak_vel_IR_deg_s,mean_vel_deg_s';
-function testHeader(T){const S=T.summary;
-  return [[],['速さテスト'],['方式',T.mode==='count'?`${T.target}回の時間`:`${T.target}秒間の回数`],['外旋目標_deg',T.erTh],['戻り判定_deg',T.backTh],
-    ['回数',T.count],['時間_s',fmt(T.totalTime,3)],['完了',T.completed?'はい':'いいえ（'+T.reason+'）'],['1秒あたり回数',fmt(S.perSec,2)],['平均1回時間_s',fmt(S.meanDur,3)],['1回時間SD_s',fmt(S.sdDur,3)],
-    ['平均最大外旋_deg',fmt(S.meanMaxER)],['平均外旋最大角速度_deg_s',fmt(S.meanPvER,0)],['平均内旋最大角速度_deg_s',fmt(S.meanPvIR,0)],['平均角速度_deg_s',fmt(S.meanVel,0)],[],
-    REPCOLS.split(','),...T.reps.map(r=>[r.n,r.start.toFixed(3),r.end.toFixed(3),r.dur.toFixed(3),r.reachTime.toFixed(3),r.maxER.toFixed(1),r.pvER.toFixed(0),r.pvIR.toFixed(0),fmt(r.meanVel,0)])].map(r=>r.map(csvq).join(','));}
-function sessionCSV(s){return '﻿'+sessionHeader(s).join('\n')+'\n'+(s.test?testHeader(s.test).join('\n')+'\n':'')+'\n'+COLS+'\n'+s.rows.map(r=>r.join(',')).join('\n')+'\n';}
-const safe=s=>String(s||'').replace(/[^A-Za-z0-9_-]+/g,'');  // ファイル名は英数字のみ（日本語名が落ちる端末があるため）
-function sessionFileName(s){return `ShoulderRot_${safe(s.subject)||'noID'}${safe(s.condition)?'_'+safe(s.condition):''}_T${s.trial}_${fstamp(new Date(s.date))}.csv`;}
-const SUMCOLS=['日時','対象者ID','測定側','条件','試行','メモ','最大外旋角度_deg','最大内旋角度_deg','可動範囲_deg','外旋方向最大角速度_deg_s','内旋方向最大角速度_deg_s','回数','記録時間_s','平均fps','テスト方式','テスト目標','テスト回数','テスト時間_s','テスト完了','1秒あたり回数','平均1回時間_s','1回時間SD_s','平均外旋最大角速度_deg_s','平均内旋最大角速度_deg_s','平均角速度_deg_s'];
-const sumRow=s=>{const S=s.summary,T=s.test,Q=T?T.summary:null;return [dstr(new Date(s.date)),s.subject,s.side,s.condition,s.trial,s.note,fmt(S.maxER),fmt(S.maxIR),fmt(S.rom),fmt(S.pvER,0),fmt(S.pvIR,0),S.reps,fmt(S.duration,2),fmt(S.fps,1),
-  ...(T?[T.mode==='count'?'回数固定':'時間固定',T.target,T.count,fmt(T.totalTime,3),T.completed?'はい':'いいえ',fmt(Q.perSec,2),fmt(Q.meanDur,3),fmt(Q.sdDur,3),fmt(Q.meanPvER,0),fmt(Q.meanPvIR,0),fmt(Q.meanVel,0)]:[])];};
-$('btnExportSum').onclick=async()=>{
-  if(!db)return; const all=(await dbAll()).sort((a,b)=>a.id-b.id); if(!all.length){msg('記録がありません。');return;}
-  await saveFile(`ShoulderRot_summary_${fstamp(new Date())}.csv`,'﻿'+[SUMCOLS,...all.map(sumRow)].map(r=>r.map(csvq).join(',')).join('\n')+'\n');
-};
-$('btnExportAll').onclick=async()=>{
-  if(!db)return; const all=(await dbAll()).sort((a,b)=>a.id-b.id); if(!all.length){msg('記録がありません。');return;}
-  const head=['record_no','subject','side','condition','trial',...COLS.split(',')];
-  const lines=[head.join(',')];
-  all.forEach((s,i)=>s.rows.forEach(r=>lines.push([i+1,csvq(s.subject),csvq(s.side),csvq(s.condition),s.trial,...r].join(','))));
-  await saveFile(`ShoulderRot_timeseries_${fstamp(new Date())}.csv`,'﻿'+lines.join('\n')+'\n');
-};
-
-// 端末への保存：iPhone/iPadは共有シート（"ファイル"に保存）、それ以外はダウンロード
+// ---------- 端末への保存 ----------
 const isIOS=/iPad|iPhone|iPod/.test(navigator.userAgent)||(navigator.platform==='MacIntel'&&navigator.maxTouchPoints>1);
-async function saveFile(name,text){
-  const blob=new Blob([text],{type:'text/csv'});
+async function saveFile(name,blob){
   if(isIOS&&navigator.canShare){
-    const f=new File([blob],name,{type:'text/csv'});
+    const f=new File([blob],name,{type:blob.type});
     if(navigator.canShare({files:[f]})){
-      try{await navigator.share({files:[f]});msg('共有画面から保存しました：'+name);return;}
+      try{await navigator.share({files:[f]});msg('保存しました：'+name);return;}
       catch(e){if(e.name==='AbortError'){msg('保存をキャンセルしました。');return;}}
     }
   }
   const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=name;
-  document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),10000);
-  msg('保存しました（ダウンロードフォルダ）：'+name);
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(a.href),20000);
+  msg('保存しました（ダウンロード）：'+name);
 }
+
+// ---------- CSV ----------
+const csvq=v=>{v=String(v??'');return /[",\n]/.test(v)?'"'+v.replace(/"/g,'""')+'"':v;};
+const COLS='time_s,olecranon_x,olecranon_y,ulna_x,ulna_y,angle_raw_deg,angle_smooth_deg,velocity_deg_s';
+const REPCOLS='rep,start_s,end_s,duration_s,time_to_target_s,max_ER_deg,peak_vel_ER_deg_s,peak_vel_IR_deg_s,mean_vel_deg_s';
+function infoRows(i){return [['ファイル名',baseName(i)],['ID番号',i.id],['回数',i.trial],['性別',i.sex],['年齢',i.age],['測定側',i.side],['条件',i.condition],['メモ',i.note]];}
+function sessionCSV(s){
+  const S=s.summary, T=s.test, out=[['[基本情報]'],...infoRows(s.info),[],['[計測]'],['日時',dstr(new Date(s.date))],['計測方法',s.source==='video'?'動画解析':'リアルタイム'],['動画',s.videoName||''],
+    ['記録時間_s',fmt(S.duration,2)],['平均フレームレート_fps',fmt(S.fps,1)],['検出率_%',fmt(S.validRatio*100,0)],['平滑化',s.settings.smooth],['アプリ版',s.version]];
+  if(T){const Q=T.summary; out.push([],['[速さテスト]'],['方式',T.mode==='count'?`${T.target}回の時間`:`${T.target}秒間の回数`],['外旋目標_deg',T.erTh],['戻り判定_deg',T.backTh],
+    ['回数',T.count],['時間_s',fmt(T.totalTime,3)],['完了',T.completed?'はい':'いいえ（'+T.reason+'）'],['1秒あたり回数',fmt(Q.perSec,2)],['平均1回時間_s',fmt(Q.meanDur,3)],['1回時間SD_s',fmt(Q.sdDur,3)],
+    ['平均最大外旋_deg',fmt(Q.meanMaxER)],['平均外旋最大角速度_deg_s',fmt(Q.meanPvER,0)],['平均内旋最大角速度_deg_s',fmt(Q.meanPvIR,0)],['平均角速度_deg_s',fmt(Q.meanVel,0)],[],
+    ['[1回ごと]'],REPCOLS.split(','),...T.reps.map(r=>[r.n,r.start.toFixed(3),r.end.toFixed(3),r.dur.toFixed(3),r.reachTime.toFixed(3),r.maxER.toFixed(1),r.pvER.toFixed(0),r.pvIR.toFixed(0),fmt(r.meanVel,0)]));}
+  else out.push([],['[自由記録]'],['最大外旋角度_deg',fmt(S.maxER)],['最大内旋角度_deg',fmt(S.maxIR)],['可動範囲_deg',fmt(S.rom)],['外旋方向最大角速度_deg_s',fmt(S.pvER,0)],['内旋方向最大角速度_deg_s',fmt(S.pvIR,0)],['回数',S.reps]);
+  out.push([],['[時系列]'],COLS.split(','));
+  return '﻿'+out.map(r=>r.map(csvq).join(',')).join('\n')+'\n'+s.rows.map(r=>r.join(',')).join('\n')+'\n';
+}
+const SUMCOLS=['ファイル名','ID番号','回数','性別','年齢','測定側','条件','メモ','日時','計測方法','種類','テスト回数','テスト時間_s','完了','1秒あたり回数','平均1回時間_s','1回時間SD_s','平均最大外旋_deg','平均外旋最大角速度_deg_s','平均内旋最大角速度_deg_s','平均角速度_deg_s','最大外旋角度_deg','最大内旋角度_deg','外旋方向最大角速度_deg_s','内旋方向最大角速度_deg_s','平均fps'];
+function sumRow(s){const i=s.info,S=s.summary,T=s.test,Q=T?T.summary:null;
+  return [baseName(i),i.id,i.trial,i.sex,i.age,i.side,i.condition,i.note,dstr(new Date(s.date)),s.source==='video'?'動画解析':'リアルタイム',T?(T.mode==='count'?`${T.target}回の時間`:`${T.target}秒間の回数`):'自由記録',
+    T?T.count:'',T?fmt(T.totalTime,3):'',T?(T.completed?'はい':'いいえ'):'',Q?fmt(Q.perSec,2):'',Q?fmt(Q.meanDur,3):'',Q?fmt(Q.sdDur,3):'',Q?fmt(Q.meanMaxER):'',Q?fmt(Q.meanPvER,0):'',Q?fmt(Q.meanPvIR,0):'',Q?fmt(Q.meanVel,0):'',
+    fmt(S.maxER),fmt(S.maxIR),fmt(S.pvER,0),fmt(S.pvIR,0),fmt(S.fps,1)];}
+$('btnExportSum').onclick=async()=>{
+  if(!db)return; const all=(await dbAll('sessions')).sort((a,b)=>a.id-b.id); if(!all.length){msg('記録がありません。');return;}
+  await saveFile(`ShoulderRot_summary_${fstamp(new Date())}.csv`,new Blob(['﻿'+[SUMCOLS,...all.map(sumRow)].map(r=>r.map(csvq).join(',')).join('\n')+'\n'],{type:'text/csv'}));
+};
+$('btnExportAll').onclick=async()=>{
+  if(!db)return; const all=(await dbAll('sessions')).sort((a,b)=>a.id-b.id); if(!all.length){msg('記録がありません。');return;}
+  const lines=[['file','id','trial','sex','age','side','condition',...COLS.split(',')].join(',')];
+  all.forEach(s=>{const i=s.info,pre=[baseName(i),i.id,i.trial,i.sex,i.age,i.side,i.condition].map(csvq).join(',');s.rows.forEach(r=>lines.push(pre+','+r.join(',')));});
+  await saveFile(`ShoulderRot_timeseries_${fstamp(new Date())}.csv`,new Blob(['﻿'+lines.join('\n')+'\n'],{type:'text/csv'}));
+};
 
 // ---------- カメラ・動画 ----------
 function stopSource(){
   if(stream){stream.getTracks().forEach(t=>t.stop());stream=null;}
-  video.pause(); video.removeAttribute('src'); video.srcObject=null; source=null;
+  video.pause(); if(video.src&&video.src.startsWith('blob:'))URL.revokeObjectURL(video.src);
+  video.removeAttribute('src'); video.srcObject=null; video.load(); source=null; loopToken++; W=0;
+  $('btnPlay').disabled=true; $('seek').disabled=true; $('seekLbl').textContent='';
 }
 async function keepAwake(){try{if(navigator.wakeLock&&!wakeLock){wakeLock=await navigator.wakeLock.request('screen');wakeLock.addEventListener('release',()=>wakeLock=null);}}catch(e){}}
 document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&source==='camera')keepAwake();});
 async function startCamera(){
   stopSource();
   if(!navigator.mediaDevices?.getUserMedia){msg('このブラウザではカメラを使えません。https のページで開いてください。');return;}
+  const hi=mode==='rec';
   try{
-    stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:facing,width:{ideal:1280},height:{ideal:720},frameRate:{ideal:60}}});
+    stream=await navigator.mediaDevices.getUserMedia({audio:false,video:{facingMode:facing,width:{ideal:hi?1920:1280},height:{ideal:hi?1080:720},frameRate:{ideal:60}}});
     video.srcObject=stream; source='camera'; await video.play();
     const s=stream.getVideoTracks()[0].getSettings();
-    msg(`カメラ: ${s.width}×${s.height} / 設定 ${s.frameRate?Math.round(s.frameRate):'?'}fps`+(markers[0].col&&markers[1].col?'（前回のマーカー色を使用中）':''));
-    $('btnPlay').disabled=true; keepAwake();
+    msg(`カメラ: ${s.width}×${s.height} / ${s.frameRate?Math.round(s.frameRate):'?'}fps`+(s.frameRate&&s.frameRate<50?'（60fpsが出ない端末です。背面カメラだと上がることがあります）':''));
+    keepAwake();
   }catch(e){msg('カメラを開けませんでした: '+e.message);}
 }
 $('btnCam').onclick=startCamera;
 $('btnFlip').onclick=()=>{facing=facing==='environment'?'user':'environment';$('facingLbl').textContent=facing==='user'?'前面':'背面';saveSettings(); if(source==='camera')startCamera();};
-$('file').onchange=async e=>{
-  const f=e.target.files[0]; if(!f)return;
-  stopSource(); video.src=URL.createObjectURL(f); source='file';
-  video.playbackRate=+$('rate').value;
-  try{await video.play();}catch(err){}
-  $('btnPlay').disabled=false; $('btnPlay').textContent='一時停止';
-  msg('動画: '+f.name+'（低速再生にすると全フレームを解析しやすくなります）');
-};
-$('rate').onchange=()=>{video.playbackRate=+$('rate').value;};
-$('btnPlay').onclick=()=>{ if(video.paused){video.play();$('btnPlay').textContent='一時停止';} else {video.pause();$('btnPlay').textContent='再生';} };
-video.addEventListener('ended',()=>{$('btnPlay').textContent='再生'; if(recording)stopRec();});
 video.addEventListener('loadedmetadata',()=>{
   const vw=video.videoWidth, vh=video.videoHeight; if(!vw)return;
   W=360; H=Math.round(W*vh/vw); work.width=W; work.height=H;
   view.width=Math.min(vw,960); view.height=Math.round(view.width*vh/vw);
   markers.forEach(m=>{m.pos=null;m.lost=99;});
-  sm=null; prevT=null; buf=[]; lastT=null;
+  sm=null; prevT=null; buf=[]; lastT=null; lastRaw=[];
+  if(source==='file'&&isFinite(video.duration)){$('seek').max=video.duration;$('seek').disabled=false;}
   startLoop();
 });
 function startLoop(){
@@ -351,6 +474,86 @@ function startLoop(){
     rvfc?video.requestVideoFrameCallback(step):requestAnimationFrame(n=>step(n,null));
   };
   rvfc?video.requestVideoFrameCallback(step):requestAnimationFrame(n=>step(n,null));
+}
+
+// ---------- 動画の解析 ----------
+$('file').onchange=e=>{const f=e.target.files[0]; if(!f)return;
+  const m=f.name.match(/ID([A-Za-z0-9-]+)_(\d+)_([MW])/), cur=getInfo();
+  const info=m?{...cur,id:m[1],trial:+m[2],sex:m[3],age:m[1]===cur.id?cur.age:'',note:''}:cur;
+  loadVideo(f,{name:f.name,info});
+  if(m)msg('ファイル名からID・回数・性別を読み取りました（年齢は同じIDのときだけ①の値を使います）。シールの色を確認し、中間位で「③ 0°に設定」してください。');
+  e.target.value='';};
+function loadVideo(blob,v){
+  stopSource(); curVideo=v||null; anaInfo=v&&v.info?{...v.info}:getInfo(); updSubj();
+  video.src=URL.createObjectURL(blob); source='file'; video.playbackRate=+$('rate').value;
+  video.addEventListener('loadeddata',()=>{video.pause();processPaused();},{once:true});
+  $('btnPlay').disabled=false; $('btnPlay').textContent='再生';
+  zero=null; $('tResult').innerHTML=''; $('tLive').textContent='';
+  msg(`動画を読み込みました${v&&v.startAt!=null?'（合図 '+v.startAt.toFixed(2)+'秒）':''}。最初のコマでシールの色を確認し、`+(v&&v.startAt!=null?'「合図から自動解析」を押してください。':'中間位で「③ 0°に設定」してください。'));
+}
+function processPaused(){ if(source!=='file'||!W)return; const t=video.currentTime; lastT=null; onFrame(t,true); }
+video.addEventListener('seeked',()=>{if(video.paused)processPaused();});
+$('rate').onchange=()=>{video.playbackRate=+$('rate').value;saveSettings();};
+$('btnPlay').onclick=()=>{ if(video.paused){video.playbackRate=+$('rate').value;video.play();$('btnPlay').textContent='一時停止';} else {video.pause();$('btnPlay').textContent='再生';} };
+$('seek').addEventListener('input',()=>{video.pause();$('btnPlay').textContent='再生';video.currentTime=+$('seek').value;});
+video.addEventListener('ended',()=>{$('btnPlay').textContent='再生';
+  if(test&&!test.done)finishTest(auto&&!auto.started?'合図より前に動画が終了':'動画が終了');
+  else if(recording)stopRec();
+  if(auto&&!auto.started){msg('合図の時刻まで解析できませんでした。');} auto=null;});
+$('btnAuto').onclick=async()=>{
+  if(source!=='file'){msg('先に動画を読み込んでください。');return;}
+  if(!curVideo||curVideo.startAt==null){msg('この動画には合図の時刻がありません。手動で「③ 0°に設定」→「テスト開始」を使ってください。');return;}
+  if(!markers[0].col||!markers[1].col){msg('先に①②でシールの色を登録してください。');return;}
+  if(!requireInfo())return;
+  auto={startAt:curVideo.startAt,raws:[],started:false};
+  zero=null; $('tResult').innerHTML=''; $('tLive').textContent='解析中…';
+  video.pause(); video.currentTime=0; await new Promise(r=>video.addEventListener('seeked',r,{once:true}));
+  sm=null;prevT=null;buf=[];lastT=null;
+  video.playbackRate=+$('rate').value; video.play(); $('btnPlay').textContent='一時停止';
+  msg('解析中…（合図の1秒前までの静止区間で0°を決めます）');
+};
+
+// ---------- 撮影のみ ----------
+let vrec=null;
+function pickMime(){const c=['video/mp4;codecs=avc1','video/mp4','video/webm;codecs=vp9','video/webm;codecs=vp8','video/webm'];
+  return window.MediaRecorder?c.find(m=>MediaRecorder.isTypeSupported(m))||'':null;}
+$('btnVRec').onclick=async()=>{
+  if(vrec){stopVRec();return;}
+  if(!requireInfo())return;
+  if(source!=='camera'||!stream){msg('先に「カメラ開始」を押してください。');return;}
+  const mime=pickMime(); if(mime===null){msg('この端末では動画の録画ができません。');return;}
+  await unlockAudio();
+  const info=getInfo(), s=stream.getVideoTracks()[0].getSettings();
+  let mr; try{mr=new MediaRecorder(stream,mime?{mimeType:mime,videoBitsPerSecond:12e6}:{videoBitsPerSecond:12e6});}catch(e){msg('録画を開始できませんでした: '+e.message);return;}
+  vrec={mr,chunks:[],info,startAt:null,t0:null,fps:s.frameRate||null,size:`${s.width}x${s.height}`,timer:null,tick:null};
+  mr.ondataavailable=e=>{if(e.data&&e.data.size)vrec.chunks.push(e.data);};
+  mr.onstop=onVRecStop;
+  mr.start(1000); vrec.t0=performance.now();
+  $('btnVRec').textContent='撮影停止'; $('vrecDone').innerHTML='';
+  vrec.tick=setInterval(()=>{if(vrec)$('vrecTime').innerHTML=`<span class="recdot">●</span> ${((performance.now()-vrec.t0)/1000).toFixed(1)}秒`+(vrec.startAt!=null?`（合図から ${((performance.now()-vrec.t0)/1000-vrec.startAt).toFixed(1)}秒）`:'');},200);
+  const cd=$('cd'); cd.style.display='flex';
+  for(let i=3;i>0;i--){if(!vrec)break;cd.textContent=i;beep(660,120);await sleep(1000);} cd.style.display='none';
+  if(!vrec)return;
+  beep(1320,350); vrec.startAt=(performance.now()-vrec.t0)/1000;
+  msg('運動開始！'); const dur=+$('recDur').value;
+  if(dur>0)vrec.timer=setTimeout(()=>{if(vrec)stopVRec();},dur*1000+300);
+};
+function stopVRec(){ if(!vrec)return; clearTimeout(vrec.timer); clearInterval(vrec.tick); $('cd').style.display='none';
+  vrec.duration=(performance.now()-vrec.t0)/1000; try{vrec.mr.stop();}catch(e){} $('btnVRec').textContent='撮影開始'; beep(660,400);}
+async function onVRecStop(){
+  const r=vrec; vrec=null; $('vrecTime').textContent='';
+  const type=(r.mr.mimeType||'video/webm').split(';')[0], ext=type.includes('mp4')?'mp4':'webm';
+  const blob=new Blob(r.chunks,{type});
+  const v={date:Date.now(),info:r.info,blob,ext,type,startAt:r.startAt,duration:r.duration,fps:r.fps,size:r.size,version:APP_VERSION};
+  let saved=false;
+  if(db){try{v.id=await dbAdd('videos',v);saved=true;}catch(e){msg('端末内に保存できませんでした: '+e.message);}}
+  const name=baseName(r.info)+'.'+ext;
+  $('vrecDone').innerHTML=`<p><b class="fname">${esc(name)}</b>（${(blob.size/1048576).toFixed(1)}MB${r.startAt==null?'・合図の前に停止':''}）${saved?'をアプリ内に保存しました。':''}</p>
+    <div class="row"><button id="btnVSaveNow" class="primary">動画を端末に保存</button>${saved?'<button id="btnVAnaNow">すぐに解析する</button>':''}</div>`;
+  $('btnVSaveNow').onclick=()=>saveFile(name,blob);
+  if(saved)$('btnVAnaNow').onclick=()=>{setMode('ana');loadVideo(blob,v);};
+  if(r.info.trial===getInfo().trial&&r.info.id===getInfo().id){$('iTrial').value=r.info.trial+1;updInfo();}
+  msg('撮影を終了しました。次の回数は '+$('iTrial').value+' 回目です。');
 }
 
 // ---------- マーカー追跡 ----------
@@ -371,10 +574,8 @@ function track(){
   for(const m of markers){
     if(!m.col){m.found=false;continue;}
     let p=null;
-    if(m.pos&&m.lost<3){  // 直前の位置の周りを先に探す。速い動きで外れたら同じフレームで全体を探し直す
-      const R=Math.round(W*0.3);
-      p=scanColor(m,Math.max(0,Math.round(m.pos.x-R)),Math.max(0,Math.round(m.pos.y-R)),Math.min(W,Math.round(m.pos.x+R)),Math.min(H,Math.round(m.pos.y+R)));
-    }
+    if(m.pos&&m.lost<3){const R=Math.round(W*0.3);
+      p=scanColor(m,Math.max(0,Math.round(m.pos.x-R)),Math.max(0,Math.round(m.pos.y-R)),Math.min(W,Math.round(m.pos.x+R)),Math.min(H,Math.round(m.pos.y+R)));}
     if(!p)p=scanColor(m,0,0,W,H);
     if(p){m.pos=p;m.found=true;m.lost=0;}else{m.found=false;m.lost++;}
   }
@@ -384,15 +585,28 @@ function rgb2hsv(r,g,b){const mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;let 
   return [h,mx?d/mx:0,mx/255];}
 
 // ---------- フレーム処理 ----------
-function onFrame(t){
+function onFrame(t,still){
   if(!W||video.readyState<2)return;
+  fpsN++; const now=performance.now(); if(now-fpsT>1000){$('fps').textContent=`処理 ${Math.round(fpsN*1000/(now-fpsT))}fps`+(recording?` / 記録 ${rows.length}行`:'');fpsN=0;fpsT=now;}
+  if(mode==='rec'){ vctx.drawImage(video,0,0,view.width,view.height); return; }   // 撮影のみ：解析しない
   if(lastT!==null&&t<lastT){buf=[];sm=null;prevT=null;}
   lastT=t;
+  if(source==='file'&&!still){$('seek').value=t;}
+  if(source==='file')$('seekLbl').textContent=`${t.toFixed(2)}秒`+(curVideo&&curVideo.startAt!=null?`（合図 ${curVideo.startAt.toFixed(2)}秒）`:'');
   wctx.drawImage(video,0,0,W,H); img=wctx.getImageData(0,0,W,H);
   track();
   const [e,w]=markers; let raw=null, rel=null, ang=null;
   if(e.found&&w.found){raw=Math.atan2(w.pos.y-e.pos.y,w.pos.x-e.pos.x)*180/Math.PI; lastRaw.push(raw); if(lastRaw.length>10)lastRaw.shift();}
-  if(raw!==null&&zero!==null){
+  if(auto&&!auto.started&&!still){
+    if(raw!=null&&t>=auto.startAt-1.0&&t<auto.startAt-0.03)auto.raws.push(raw);
+    if(t>=auto.startAt){
+      const src=auto.raws.length>=3?auto.raws:lastRaw;
+      if(!src.length){msg('合図の前にマーカーが見つかりませんでした。色の登録を確認してください。');video.pause();auto=null;return;}
+      zero=circMean(src); sm=null; prevT=null; buf=[]; auto.started=true;
+      beginTest(); msg(`合図（${auto.startAt.toFixed(2)}秒）から解析中…`);
+    }
+  }
+  if(raw!==null&&zero!==null&&!still){
     rel=wrap(raw-zero)*sign;
     const k=+$('smooth').value;
     if(sm===null||prevT===null||t-prevT>0.3||t<=prevT){sm=rel;vel=0;}
@@ -404,16 +618,15 @@ function onFrame(t){
     if(stats.pvIR===null||vel<stats.pvIR)stats.pvIR=vel;
     if(armed&&ang>=+$('thER').value){stats.reps++;armed=false;} else if(!armed&&ang<=+$('thBack').value)armed=true;
     buf.push({t,a:ang,v:vel});
-  }
-  if(recording&&test&&!test.done)testStep(t,ang,vel);
+  } else if(raw!==null&&zero!==null&&still){ ang=wrap(raw-zero)*sign; }
   while(buf.length&&t-buf[0].t>10)buf.shift();
-  if(recording){
+  if(recording&&!still){
     if(recT0===null)recT0=t;
     rows.push([+(t-recT0).toFixed(4), e.found?+e.pos.x.toFixed(2):'', e.found?+e.pos.y.toFixed(2):'', w.found?+w.pos.x.toFixed(2):'', w.found?+w.pos.y.toFixed(2):'',
       rel==null?'':+rel.toFixed(2), ang==null?'':+ang.toFixed(2), ang==null?'':+vel.toFixed(1)]);
   }
-  drawView(); updateUI(ang); drawChart();
-  fpsN++; const now=performance.now(); if(now-fpsT>1000){$('fps').textContent=`処理 ${Math.round(fpsN*1000/(now-fpsT))}fps`+(recording?` / 記録 ${rows.length}行`:'');fpsN=0;fpsT=now;}
+  if(recording&&test&&!test.done&&!still)testStep(t,ang,vel);
+  drawView(); updateUI(ang,still); drawChart();
 }
 
 function drawView(){
@@ -427,7 +640,7 @@ function drawView(){
     vctx.beginPath(); vctx.moveTo(e.pos.x*k,e.pos.y*k); vctx.lineTo(e.pos.x*k+L*Math.cos(z),e.pos.y*k+L*Math.sin(z)); vctx.stroke(); vctx.setLineDash([]);
   }
   if(e.found&&w.found){vctx.strokeStyle='#fff';vctx.beginPath();vctx.moveTo(e.pos.x*k,e.pos.y*k);vctx.lineTo(w.pos.x*k,w.pos.y*k);vctx.stroke();}
-  markers.forEach((m,i)=>{
+  markers.forEach(m=>{
     if(!m.pos||m.lost>15)return;
     vctx.strokeStyle=m.found?m.draw:'rgba(255,80,80,.9)';
     vctx.beginPath(); vctx.arc(m.pos.x*k,m.pos.y*k,view.width/45,0,Math.PI*2); vctx.stroke();
@@ -437,12 +650,11 @@ function drawView(){
   if(pickMode>=0){vctx.fillStyle='rgba(0,0,0,.55)';vctx.fillRect(0,0,view.width,view.width/14);
     vctx.fillStyle='#fff';vctx.font=`${Math.round(view.width/30)}px sans-serif`;vctx.fillText(`${markers[pickMode].name}マーカーをタップ`,view.width/60,view.width/20);}
 }
-
-function updateUI(ang){
+function updateUI(ang,still){
   if(ang==null){$('ang').textContent=zero===null?'—':'見失い';$('dir').textContent='';$('vel').textContent='—';}
   else{$('ang').textContent=Math.abs(ang).toFixed(1)+'°';
     $('dir').textContent=ang>=0?'外旋':'内旋'; $('dir').className='dir '+(ang>=0?'er':'ir');
-    $('vel').textContent=vel.toFixed(0)+' °/s';}
+    $('vel').textContent=still?'—':vel.toFixed(0)+' °/s';}
   $('maxER').textContent=stats.maxER==null?'—':fmt(Math.max(0,stats.maxER))+'°';
   $('maxIR').textContent=stats.maxIR==null?'—':fmt(Math.max(0,-stats.maxIR))+'°';
   $('pvER').textContent=stats.pvER==null?'—':fmt(Math.max(0,stats.pvER),0)+' °/s';
@@ -454,7 +666,7 @@ function updateUI(ang){
 // ---------- グラフ ----------
 const chart=$('chart'), cctx=chart.getContext('2d');
 function drawChart(){
-  const dpr=window.devicePixelRatio||1, cw=chart.clientWidth, ch=chart.clientHeight;
+  const dpr=window.devicePixelRatio||1, cw=chart.clientWidth, ch=chart.clientHeight; if(!cw)return;
   if(chart.width!==Math.round(cw*dpr)){chart.width=Math.round(cw*dpr);chart.height=Math.round(ch*dpr);}
   cctx.setTransform(dpr,0,0,dpr,0,0); cctx.clearRect(0,0,cw,ch);
   const cs=getComputedStyle(document.documentElement), sub=cs.getPropertyValue('--sub'), line=cs.getPropertyValue('--line');
@@ -474,9 +686,9 @@ function drawChart(){
   });
 }
 
-// ---------- 操作 ----------
+// ---------- マーカー・0° ----------
 function setPick(i){pickMode=i; $('pick0').classList.toggle('on',i===0); $('pick1').classList.toggle('on',i===1);
-  if(i>=0)msg(`${markers[i].name}マーカーを画面上でタップしてください。`);}
+  if(i>=0){msg(`${markers[i].name}マーカーを画面上でタップしてください。`); if(source==='file'&&video.paused)drawView();}}
 $('pick0').onclick=()=>setPick(0); $('pick1').onclick=()=>setPick(1);
 view.addEventListener('click',ev=>{
   if(pickMode<0||!img)return;
@@ -488,69 +700,73 @@ view.addEventListener('click',ev=>{
   const i=pickMode, m=markers[i]; m.col=hsv; m.pos={x,y}; m.lost=0;
   $('sw'+i).style.background=`rgb(${R|0},${G|0},${B|0})`; saveSettings();
   if(i===0&&!markers[1].col){setPick(1);msg('肘頭を登録しました。次に尺骨マーカーをタップしてください。');}
-  else{setPick(-1);msg(`${m.name}マーカーの色を登録しました。前腕中間位で「③ 0°に設定」を押してください。`);}
-  if(video.paused&&source==='file')drawView();
+  else{setPick(-1);msg(`${m.name}マーカーの色を登録しました。`+(curVideo&&curVideo.startAt!=null?'「合図から自動解析」を押してください。':'前腕中間位で「③ 0°に設定」を押してください。'));}
+  if(source==='file'&&video.paused)processPaused();
 });
 $('btnZero').onclick=()=>{
   if(!lastRaw.length||!markers[0].found||!markers[1].found){msg('2つのマーカーが検出されていません。');return;}
-  let s=0,c=0; lastRaw.forEach(a=>{s+=Math.sin(a*Math.PI/180);c+=Math.cos(a*Math.PI/180);});
-  zero=Math.atan2(s,c)*180/Math.PI; sm=null; prevT=null; buf=[]; resetStats();
+  zero=circMean(lastRaw.slice(source==='file'&&video.paused?-1:0)); sm=null; prevT=null; buf=[]; resetStats();
   msg('0°を設定しました。外旋して「外旋」と出ない場合は「外旋の向きを反転」を押してください。');
+  if(source==='file'&&video.paused)processPaused();
 };
-$('btnSign').onclick=()=>{sign*=-1; saveSettings(); sm=null; prevT=null; buf=[]; resetStats(); msg('外旋の向きを反転しました。');};
+$('btnSign').onclick=()=>{sign*=-1; saveSettings(); sm=null; prevT=null; buf=[]; resetStats(); msg('外旋の向きを反転しました。'); if(source==='file'&&video.paused)processPaused();};
 $('btnReset').onclick=()=>{resetStats(); msg('最大値と回数をリセットしました。');};
 
-const sleep=ms=>new Promise(r=>setTimeout(r,ms));
-function beginRec(){rows=[];recT0=null;recStartWall=Date.now();resetStats();recording=true;$('btnRec').textContent='記録停止';}
-async function startRec(){
+// ---------- 記録（自由記録・テスト共通） ----------
+function beginRec(){rows=[];recT0=null;recStartWall=Date.now();resetStats();recording=true;}
+$('btnRec').onclick=()=>{
+  if(test)return;
+  if(recording){stopRec();return;}
+  if(!requireInfo())return;
   if(zero===null){msg('先に「③ 0°に設定」をしてください。');return;}
-  $('btnRec').disabled=true;
-  if($('mCount').checked&&source==='camera'){
-    const cd=$('cd'); cd.style.display='flex';
-    for(let i=3;i>0;i--){cd.textContent=i;await sleep(1000);} cd.style.display='none';
-  }
-  beginRec();
-  $('btnRec').disabled=false; msg('記録中…');
-  const dur=+$('mDur').value; if(dur>0)durTimer=setTimeout(()=>{if(recording)stopRec();},dur*1000);
-}
+  beginRec(); $('btnRec').textContent='自由記録 停止'; msg('記録中…');
+  if(source==='file'&&video.paused){video.playbackRate=+$('rate').value;video.play();$('btnPlay').textContent='一時停止';}
+};
 async function stopRec(){
-  recording=false; clearTimeout(durTimer); $('btnRec').textContent='記録開始';
-  const T=test; test=null; $('btnTest').textContent='テスト開始'; $('btnTest').disabled=false;
+  recording=false; $('btnRec').textContent='自由記録 開始';
+  const T=test; test=null; $('btnTest').textContent='テスト開始'; $('btnTest').disabled=false; $('btnAuto').disabled=false;
   if(!rows.length){msg('記録されたデータがありません。');return;}
   const valid=rows.filter(r=>r[6]!=='').length, duration=rows[rows.length-1][0];
-  const s={date:recStartWall,version:APP_VERSION,subject:$('mSubj').value.trim(),side:$('mSide').value,condition:$('mCond').value.trim(),
-    trial:+$('mTrial').value||1,note:$('mNote').value.trim(),
+  const isVideo=source==='file', info=isVideo&&anaInfo?anaInfo:getInfo();
+  const s={date:recStartWall,version:APP_VERSION,info,source:isVideo?'video':'realtime',videoName:isVideo?(curVideo&&curVideo.name?curVideo.name:curVideo&&curVideo.info?baseName(curVideo.info)+'.'+curVideo.ext:''):'',
     settings:{smooth:+$('smooth').value,zero,sign,tolH:+$('tolH').value,thER:+$('thER').value,thBack:+$('thBack').value},
     summary:{maxER:stats.maxER==null?null:Math.max(0,stats.maxER),maxIR:stats.maxIR==null?null:Math.max(0,-stats.maxIR),
       rom:stats.maxER==null?null:Math.max(0,stats.maxER)+Math.max(0,-stats.maxIR),
       pvER:stats.pvER==null?null:Math.max(0,stats.pvER),pvIR:stats.pvIR==null?null:Math.max(0,-stats.pvIR),
       reps:stats.reps,duration,fps:duration>0?(rows.length-1)/duration:null,validRatio:valid/rows.length},rows};
   if(T&&T.result)s.test={mode:T.mode,target:T.target,erTh:T.erTh,backTh:T.backTh,count:T.result.count,totalTime:T.result.totalTime,completed:T.result.completed,reason:T.result.reason,reps:T.reps,summary:T.summary};
-  if(!db){msg('端末内に保存できなかったため、CSVで書き出します。');await saveFile(sessionFileName(s),sessionCSV(s));return;}
-  try{await dbAdd(s); $('mTrial').value=s.trial+1; renderHist();
-    msg(`端末に保存しました（${rows.length}フレーム、検出率${Math.round(s.summary.validRatio*100)}%）。`);}
+  if(!db){msg('端末内に保存できなかったため、CSVで書き出します。');await saveFile(baseName(info)+'.csv',new Blob([sessionCSV(s)],{type:'text/csv'}));return;}
+  try{const id=await dbAdd('sessions',s); s.id=id;
+    const name=baseName(info)+'.csv';
+    $('tResult').insertAdjacentHTML('beforeend',`<div class="row" style="margin-top:8px"><button id="btnCsvNow" class="primary">CSVを端末に保存（${esc(name)}）</button></div>`);
+    if(!T)$('tResult').innerHTML=`<div class="row" style="margin-top:8px"><button id="btnCsvNow" class="primary">CSVを端末に保存（${esc(name)}）</button></div>`;
+    $('btnCsvNow').onclick=()=>saveFile(name,new Blob([sessionCSV(s)],{type:'text/csv'}));
+    if(!isVideo){$('iTrial').value=info.trial+1;updInfo();}
+    msg(`アプリ内に保存しました（${rows.length}フレーム、検出率${Math.round(s.summary.validRatio*100)}%）。`+(isVideo?'':'次の回数は '+$('iTrial').value+' 回目です。'));}
   catch(e){msg('保存に失敗しました: '+e.message);}
 }
-$('btnRec').onclick=()=>{if(test){finishTest('中止');return;} recording?stopRec():startRec();};
 
 // ---------- 速さテスト ----------
 function updTestLbl(){const t=$('tMode').value==='time';$('tTargetLbl').textContent=t?'時間':'回数';$('tUnit').textContent=t?'秒':'回';}
 $('tMode').addEventListener('change',()=>{updTestLbl();saveSettings();}); updTestLbl();
-['tTarget','tER','tBack'].forEach(id=>$(id).addEventListener('change',saveSettings));
+['tTarget','tER','tBack','recDur'].forEach(id=>$(id).addEventListener('change',saveSettings));
+function testCfg(){const c={mode:$('tMode').value,target:Math.max(1,+$('tTarget').value||10),erTh:+$('tER').value||45,backTh:+$('tBack').value};
+  if(c.backTh>=c.erTh){msg('戻りの判定は外旋の目標より小さくしてください。');return null;} return c;}
+function beginTest(){const c=testCfg()||{mode:'count',target:10,erTh:45,backTh:0};
+  test={...c,t0:null,reps:[],cur:null,done:false}; $('tResult').innerHTML=''; beginRec();
+  $('btnTest').textContent='テスト中止'; $('btnAuto').disabled=true;}
 $('btnTest').onclick=async()=>{
   if(test){finishTest('中止');return;}
-  if(recording){msg('記録を止めてから開始してください。');return;}
+  if(recording){msg('自由記録を止めてから開始してください。');return;}
+  if(!requireInfo())return;
   if(zero===null){msg('先に「③ 0°に設定」をしてください。');return;}
-  const cfg={mode:$('tMode').value,target:Math.max(1,+$('tTarget').value||10),erTh:+$('tER').value||45,backTh:+$('tBack').value};
-  if(cfg.backTh>=cfg.erTh){msg('戻りの判定は外旋の目標より小さくしてください。');return;}
-  try{actx=actx||new (window.AudioContext||window.webkitAudioContext)();await actx.resume();}catch(e){}
-  $('btnTest').disabled=true; $('tResult').innerHTML='';
+  if(!testCfg())return;
+  await unlockAudio(); $('btnTest').disabled=true; $('tResult').innerHTML='';
   if(source==='camera'){const cd=$('cd');cd.style.display='flex';
-    for(let i=3;i>0;i--){cd.textContent=i;beep(660,120);await sleep(1000);} cd.style.display='none';}
-  beep(1320,350);
-  test={...cfg,t0:null,reps:[],cur:null,done:false};
-  beginRec(); $('btnTest').disabled=false; $('btnTest').textContent='テスト中止';
-  msg(cfg.mode==='count'?`${cfg.target}回をできるだけ速く。`:`${cfg.target}秒間、できるだけ多く。`);
+    for(let i=3;i>0;i--){cd.textContent=i;beep(660,120);await sleep(1000);} cd.style.display='none'; beep(1320,350);}
+  beginTest(); $('btnTest').disabled=false;
+  if(source==='file'){video.playbackRate=+$('rate').value;video.play();$('btnPlay').textContent='一時停止';}
+  const c=testCfg(); msg(c.mode==='count'?`${c.target}回をできるだけ速く。`:`${c.target}秒間、できるだけ多く。`);
 };
 function newRep(el,ang){return {tStart:el,maxA:ang,pvER:0,pvIR:0,path:0,last:ang,reached:false,tReach:null};}
 function testStep(t,ang,vel){
@@ -564,15 +780,13 @@ function testStep(t,ang,vel){
     else if(c.reached&&ang<=test.backTh){
       const dur=el-c.tStart;
       test.reps.push({n:test.reps.length+1,start:c.tStart,end:el,dur,reachTime:c.tReach-c.tStart,maxER:c.maxA,pvER:c.pvER,pvIR:c.pvIR,meanVel:dur>0?c.path/dur:null});
-      test.cur=newRep(el,ang); beep(1100,60);
+      test.cur=newRep(el,ang); if(source==='camera')beep(1100,60);
       if(test.mode==='count'&&test.reps.length>=test.target){finishTest();return;}
     }
   }
   if(test.mode==='time'&&el>=test.target){finishTest();return;}
   $('tLive').textContent=`${test.reps.length}回 / ${el.toFixed(1)}秒`;
 }
-const mean=a=>a.length?a.reduce((x,y)=>x+y,0)/a.length:null;
-const sd=a=>{if(a.length<2)return null;const m=mean(a);return Math.sqrt(a.reduce((x,y)=>x+(y-m)**2,0)/(a.length-1));};
 function finishTest(reason){
   if(!test||test.done)return; test.done=true;
   const R=test.reps, n=R.length, el=test.t0==null?0:lastT-test.t0;
@@ -581,7 +795,9 @@ function finishTest(reason){
   test.result={count:n,totalTime,completed,reason:reason||(completed?'':'未完了')};
   test.summary={perSec:totalTime>0?n/totalTime:null,meanDur:mean(R.map(r=>r.dur)),sdDur:sd(R.map(r=>r.dur)),meanMaxER:mean(R.map(r=>r.maxER)),
     meanPvER:mean(R.map(r=>r.pvER)),meanPvIR:mean(R.map(r=>r.pvIR)),meanVel:mean(R.map(r=>r.meanVel).filter(v=>v!=null))};
-  beep(660,500);
+  if(source==='camera')beep(660,500);
+  if(source==='file'){video.pause();$('btnPlay').textContent='再生';}
+  auto=null;
   const S=test.summary;
   $('tLive').textContent=`${n}回 / ${fmt(totalTime,2)}秒`+(completed?'':'（'+test.result.reason+'）');
   $('tResult').innerHTML=`<div class="grid" style="margin:8px 0">
@@ -595,10 +811,14 @@ function finishTest(reason){
   stopRec();
 }
 
+// ---------- 起動 ----------
 [['tolH',v=>v+'°'],['smooth',v=>(+v).toFixed(2)],['thER',v=>v+'°'],['thBack',v=>v+'°']].forEach(([id,f])=>{
-  const upd=()=>$(id+'v').textContent=f($(id).value); $(id).addEventListener('input',()=>{upd();saveSettings();}); upd();});
-['mSide','mDur','mCount'].forEach(id=>$(id).addEventListener('change',saveSettings));
-window.addEventListener('resize',drawChart); drawChart();
+  const upd=()=>$(id+'v').textContent=f($(id).value); $(id).addEventListener('input',()=>{upd();saveSettings();}); $(id).dataset.upd='1'; window['upd_'+id]=upd;});
+loadSettings();
+['tolH','smooth','thER','thBack'].forEach(id=>window['upd_'+id]());
+updTestLbl(); updInfo();
+$('facingLbl').textContent=facing==='user'?'前面':'背面';
+window.addEventListener('resize',drawChart); clearView();
 initStorage();
 if('serviceWorker' in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('sw.js').catch(()=>{});
 </script>
