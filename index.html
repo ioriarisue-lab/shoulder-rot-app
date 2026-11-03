@@ -136,6 +136,7 @@ body.m-rt .row[data-modes~="rt"],body.m-rec .row[data-modes~="rec"],body.m-ana .
         <button id="pick1">② 尺骨マーカー<span class="swatch" id="sw1"></span></button>
         <button id="btnZero">③ 0°に設定</button>
         <button id="btnSign">外旋の向きを反転</button>
+        <label class="small"><input type="checkbox" id="dbg"> 検出の様子を表示</label>
       </div>
       <div class="small" id="fps"></div>
     </div>
@@ -244,7 +245,7 @@ body.m-rt .row[data-modes~="rt"],body.m-rec .row[data-modes~="rec"],body.m-ana .
 <div class="countdown" id="cd"></div>
 <video id="video" playsinline muted style="display:none"></video>
 <script>
-const APP_VERSION='2.0.0';
+const APP_VERSION='2.1.0';
 const $=id=>document.getElementById(id);
 $('ver').textContent='v'+APP_VERSION;
 const video=$('video'), view=$('view'), vctx=view.getContext('2d');
@@ -280,13 +281,13 @@ function loadSettings(){
     SET_KEYS.forEach(k=>{if(s[k]!=null)$(k).value=s[k];});
     if(s.iSex)document.querySelectorAll('input[name=iSex]').forEach(r=>r.checked=r.value===s.iSex);
     if(s.facing)facing=s.facing; if(s.sign)sign=s.sign;
-    markers.forEach((m,i)=>{if(s['col'+i]){m.col=s['col'+i];$('sw'+i).style.background=s['rgb'+i];}});
+    markers.forEach((m,i)=>{if(s['col'+i]){m.col=s['col'+i];m.areaN=s['area'+i]||null;$('sw'+i).style.background=s['rgb'+i];}});
   }catch(e){}
 }
 function saveSettings(){
   try{const s={};SET_KEYS.forEach(k=>s[k]=$(k).value);
     s.iSex=sexVal(); s.facing=facing; s.sign=sign;
-    markers.forEach((m,i)=>{if(m.col){s['col'+i]=m.col;s['rgb'+i]=$('sw'+i).style.background;}});
+    markers.forEach((m,i)=>{if(m.col){s['col'+i]=m.col;s['area'+i]=m.areaN||null;s['rgb'+i]=$('sw'+i).style.background;}});
     localStorage.setItem(LS,JSON.stringify(s));}catch(e){}
 }
 
@@ -408,7 +409,7 @@ const REPCOLS='rep,start_s,end_s,duration_s,time_to_target_s,max_ER_deg,peak_vel
 function infoRows(i){return [['ファイル名',baseName(i)],['ID番号',i.id],['回数',i.trial],['性別',i.sex],['年齢',i.age],['測定側',i.side],['条件',i.condition],['メモ',i.note]];}
 function sessionCSV(s){
   const S=s.summary, T=s.test, out=[['[基本情報]'],...infoRows(s.info),[],['[計測]'],['日時',dstr(new Date(s.date))],['計測方法',s.source==='video'?'動画解析':'リアルタイム'],['動画',s.videoName||''],
-    ['記録時間_s',fmt(S.duration,2)],['平均フレームレート_fps',fmt(S.fps,1)],['検出率_%',fmt(S.validRatio*100,0)],['平滑化',s.settings.smooth],['アプリ版',s.version]];
+    ['記録時間_s',fmt(S.duration,2)],['平均フレームレート_fps',fmt(S.fps,1)],['検出率_%',fmt(S.validRatio*100,0)],['平滑化',s.settings.smooth],['色の許容幅',s.settings.tolH],['解析の画像幅_px',s.settings.W||''],['前腕長_px',fmt(s.settings.L0,1)],['アプリ版',s.version]];
   if(T){const Q=T.summary; out.push([],['[速さテスト]'],['方式',T.mode==='count'?`${T.target}回の時間`:`${T.target}秒間の回数`],['外旋目標_deg',T.erTh],['戻り判定_deg',T.backTh],
     ['回数',T.count],['時間_s',fmt(T.totalTime,3)],['完了',T.completed?'はい':'いいえ（'+T.reason+'）'],['1秒あたり回数',fmt(Q.perSec,2)],['平均1回時間_s',fmt(Q.meanDur,3)],['1回時間SD_s',fmt(Q.sdDur,3)],
     ['平均最大外旋_deg',fmt(Q.meanMaxER)],['平均外旋最大角速度_deg_s',fmt(Q.meanPvER,0)],['平均内旋最大角速度_deg_s',fmt(Q.meanPvIR,0)],['平均角速度_deg_s',fmt(Q.meanVel,0)],[],
@@ -458,7 +459,7 @@ $('btnCam').onclick=startCamera;
 $('btnFlip').onclick=()=>{facing=facing==='environment'?'user':'environment';$('facingLbl').textContent=facing==='user'?'前面':'背面';saveSettings(); if(source==='camera')startCamera();};
 video.addEventListener('loadedmetadata',()=>{
   const vw=video.videoWidth, vh=video.videoHeight; if(!vw)return;
-  W=360; H=Math.round(W*vh/vw); work.width=W; work.height=H;
+  W=Math.min(vw,source==='file'?640:400); H=Math.round(W*vh/vw); work.width=W; work.height=H; L0=null; lastDist=[];
   view.width=Math.min(vw,960); view.height=Math.round(view.width*vh/vw);
   markers.forEach(m=>{m.pos=null;m.lost=99;});
   sm=null; prevT=null; buf=[]; lastT=null; lastRaw=[];
@@ -505,7 +506,7 @@ $('btnAuto').onclick=async()=>{
   if(!curVideo||curVideo.startAt==null){msg('この動画には合図の時刻がありません。手動で「③ 0°に設定」→「テスト開始」を使ってください。');return;}
   if(!markers[0].col||!markers[1].col){msg('先に①②でシールの色を登録してください。');return;}
   if(!requireInfo())return;
-  auto={startAt:curVideo.startAt,raws:[],started:false};
+  auto={startAt:curVideo.startAt,raws:[],dists:[],started:false}; L0=null;
   zero=null; $('tResult').innerHTML=''; $('tLive').textContent='解析中…';
   video.pause(); video.currentTime=0; await new Promise(r=>video.addEventListener('seeked',r,{once:true}));
   sm=null;prevT=null;buf=[];lastT=null;
@@ -557,29 +558,63 @@ async function onVRecStop(){
 }
 
 // ---------- マーカー追跡 ----------
-function scanColor(m,x0,y0,x1,y1){
-  const d=img.data, tolH=+$('tolH').value, [mh,ms,mv]=m.col, sMin=Math.max(0.15,ms-0.35), vMin=Math.max(0.12,mv-0.45)*255;
-  let sx=0,sy=0,n=0;
-  for(let y=y0;y<y1;y++){let i=(y*W+x0)*4;
-    for(let x=x0;x<x1;x++,i+=4){
-      const r=d[i],g=d[i+1],b=d[i+2],mx=r>g?(r>b?r:b):(g>b?g:b),mn=r<g?(r<b?r:b):(g<b?g:b);
+// 色の合う画素を「塊」に分け、シールらしい塊を1つ選ぶ
+let stamp=null, seen=null, stackBuf=null, gen=0, seenGen=0, dbgImg=null, L0=null, lastDist=[];
+const dbgCv=document.createElement('canvas'), dbgCtx=dbgCv.getContext('2d');
+function ensureBufs(){const n=W*H; if(!stamp||stamp.length!==n){stamp=new Int32Array(n);seen=new Int32Array(n);stackBuf=new Int32Array(n);gen=0;seenGen=0;
+  dbgCv.width=W;dbgCv.height=H;dbgImg=dbgCtx.createImageData(W,H);}}
+const DBGCOL=[[0,229,255],[255,212,0]];
+function matchRegion(m,x0,y0,x1,y1,g,mi){
+  const d=img.data, tolH=+$('tolH').value, [mh,ms,mv]=m.col, sMin=Math.max(0.15,ms-0.35), vMin=Math.max(0.12,mv-0.45)*255, dbg=$('dbg').checked, dd2=dbgImg.data, dc=DBGCOL[mi];
+  let n=0;
+  for(let y=y0;y<y1;y++){let i=(y*W+x0)*4, idx=y*W+x0;
+    for(let x=x0;x<x1;x++,i+=4,idx++){
+      const r=d[i],g2=d[i+1],b=d[i+2],mx=r>g2?(r>b?r:b):(g2>b?g2:b),mn=r<g2?(r<b?r:b):(g2<b?g2:b);
       if(mx<vMin)continue; const dd=mx-mn; if(dd===0||dd<sMin*mx)continue;
-      let h; if(mx===r)h=60*(((g-b)/dd)%6); else if(mx===g)h=60*((b-r)/dd+2); else h=60*((r-g)/dd+4);
+      let h; if(mx===r)h=60*(((g2-b)/dd)%6); else if(mx===g2)h=60*((b-r)/dd+2); else h=60*((r-g2)/dd+4);
       if(h<0)h+=360; let dh=Math.abs(h-mh); if(dh>180)dh=360-dh; if(dh>tolH)continue;
-      sx+=x;sy+=y;n++;
+      stamp[idx]=g; n++;
+      if(dbg){dd2[i]=dc[0];dd2[i+1]=dc[1];dd2[i+2]=dc[2];dd2[i+3]=170;}
     }}
-  return n>=6?{x:sx/n,y:sy/n}:null;
+  return n;
 }
-function track(){
-  for(const m of markers){
-    if(!m.col){m.found=false;continue;}
-    let p=null;
-    if(m.pos&&m.lost<3){const R=Math.round(W*0.3);
-      p=scanColor(m,Math.max(0,Math.round(m.pos.x-R)),Math.max(0,Math.round(m.pos.y-R)),Math.min(W,Math.round(m.pos.x+R)),Math.min(H,Math.round(m.pos.y+R)));}
-    if(!p)p=scanColor(m,0,0,W,H);
-    if(p){m.pos=p;m.found=true;m.lost=0;}else{m.found=false;m.lost++;}
+function blobs(x0,y0,x1,y1,g){
+  const out=[]; seenGen++;
+  for(let y=y0;y<y1;y++)for(let x=x0;x<x1;x++){
+    const s0=y*W+x; if(stamp[s0]!==g||seen[s0]===seenGen)continue;
+    let sp=0,area=0,sx=0,sy=0; stackBuf[sp++]=s0; seen[s0]=seenGen;
+    while(sp){const id=stackBuf[--sp], px=id%W, py=(id-px)/W; area++; sx+=px; sy+=py;
+      for(let ny=py-1;ny<=py+1;ny++){if(ny<y0||ny>=y1)continue;
+        for(let nx=px-1;nx<=px+1;nx++){if(nx<x0||nx>=x1)continue; const j=ny*W+nx;
+          if(stamp[j]===g&&seen[j]!==seenGen){seen[j]=seenGen;stackBuf[sp++]=j;}}}}
+    out.push({x:sx/area,y:sy/area,area});
   }
+  return out;
 }
+const minBy=(a,f)=>a.reduce((b,c)=>f(c)<f(b)?c:b);
+function pickBlob(mi,list){
+  const m=markers[mi], ref=m.areaN?m.areaN*W*H:null;
+  let cand=list.filter(b=>b.area>=Math.max(6,ref?ref*0.25:0)&&(!ref||b.area<=ref*4));
+  if(!cand.length)return null;
+  const prev=m.pos&&m.lost<15?m.pos:null, e=markers[0];
+  if(mi===1&&L0&&e.found){   // 尺骨：肘頭からの距離（前腕の長さ）がほぼ一定であることを使う
+    const dErr=b=>Math.abs(Math.hypot(b.x-e.pos.x,b.y-e.pos.y)-L0);
+    cand=cand.filter(b=>dErr(b)<=0.3*L0); if(!cand.length)return null;
+    return minBy(cand,b=>dErr(b)+(prev?0.3*Math.hypot(b.x-prev.x,b.y-prev.y):0));
+  }
+  if(prev)return minBy(cand,b=>Math.hypot(b.x-prev.x,b.y-prev.y));
+  return cand.reduce((a,b)=>b.area>a.area?b:a);
+}
+function detectMarker(mi){
+  const m=markers[mi]; if(!m.col){m.found=false;return;}
+  const tryR=(x0,y0,x1,y1)=>{gen++; if(matchRegion(m,x0,y0,x1,y1,gen,mi)<6)return null; return pickBlob(mi,blobs(x0,y0,x1,y1,gen));};
+  let p=null;
+  if(m.pos&&m.lost<5){const R=Math.round(W*(mi===0?0.12:0.3));
+    p=tryR(Math.max(0,Math.round(m.pos.x-R)),Math.max(0,Math.round(m.pos.y-R)),Math.min(W,Math.round(m.pos.x+R)),Math.min(H,Math.round(m.pos.y+R)));}
+  if(!p)p=tryR(0,0,W,H);
+  if(p){m.pos={x:p.x,y:p.y};m.area=p.area;m.found=true;m.lost=0;}else{m.found=false;m.lost++;}
+}
+function track(){ ensureBufs(); if($('dbg').checked)dbgImg.data.fill(0); detectMarker(0); detectMarker(1); }
 function rgb2hsv(r,g,b){const mx=Math.max(r,g,b),mn=Math.min(r,g,b),d=mx-mn;let h=0;
   if(d){if(mx===r)h=60*(((g-b)/d)%6);else if(mx===g)h=60*((b-r)/d+2);else h=60*((r-g)/d+4);if(h<0)h+=360;}
   return [h,mx?d/mx:0,mx/255];}
@@ -596,13 +631,14 @@ function onFrame(t,still){
   wctx.drawImage(video,0,0,W,H); img=wctx.getImageData(0,0,W,H);
   track();
   const [e,w]=markers; let raw=null, rel=null, ang=null;
-  if(e.found&&w.found){raw=Math.atan2(w.pos.y-e.pos.y,w.pos.x-e.pos.x)*180/Math.PI; lastRaw.push(raw); if(lastRaw.length>10)lastRaw.shift();}
+  if(e.found&&w.found){raw=Math.atan2(w.pos.y-e.pos.y,w.pos.x-e.pos.x)*180/Math.PI; lastRaw.push(raw); if(lastRaw.length>10)lastRaw.shift();
+    lastDist.push(Math.hypot(w.pos.x-e.pos.x,w.pos.y-e.pos.y)); if(lastDist.length>10)lastDist.shift();}
   if(auto&&!auto.started&&!still){
-    if(raw!=null&&t>=auto.startAt-1.0&&t<auto.startAt-0.03)auto.raws.push(raw);
+    if(raw!=null&&t>=auto.startAt-1.0&&t<auto.startAt-0.03){auto.raws.push(raw);auto.dists.push(lastDist[lastDist.length-1]);}
     if(t>=auto.startAt){
       const src=auto.raws.length>=3?auto.raws:lastRaw;
       if(!src.length){msg('合図の前にマーカーが見つかりませんでした。色の登録を確認してください。');video.pause();auto=null;return;}
-      zero=circMean(src); sm=null; prevT=null; buf=[]; auto.started=true;
+      zero=circMean(src); L0=mean(auto.dists.length?auto.dists:lastDist); sm=null; prevT=null; buf=[]; auto.started=true;
       beginTest(); msg(`合図（${auto.startAt.toFixed(2)}秒）から解析中…`);
     }
   }
@@ -639,6 +675,8 @@ function drawView(){
     vctx.setLineDash([8,6]); vctx.strokeStyle='rgba(255,255,255,.85)';
     vctx.beginPath(); vctx.moveTo(e.pos.x*k,e.pos.y*k); vctx.lineTo(e.pos.x*k+L*Math.cos(z),e.pos.y*k+L*Math.sin(z)); vctx.stroke(); vctx.setLineDash([]);
   }
+  if($('dbg').checked&&dbgImg){dbgCtx.putImageData(dbgImg,0,0);vctx.drawImage(dbgCv,0,0,view.width,view.height);
+    if(e.found&&L0){vctx.strokeStyle='rgba(255,212,0,.6)';vctx.setLineDash([4,6]);vctx.beginPath();vctx.arc(e.pos.x*k,e.pos.y*k,L0*k,0,Math.PI*2);vctx.stroke();vctx.setLineDash([]);}}
   if(e.found&&w.found){vctx.strokeStyle='#fff';vctx.beginPath();vctx.moveTo(e.pos.x*k,e.pos.y*k);vctx.lineTo(w.pos.x*k,w.pos.y*k);vctx.stroke();}
   markers.forEach(m=>{
     if(!m.pos||m.lost>15)return;
@@ -697,7 +735,10 @@ view.addEventListener('click',ev=>{
   for(let yy=y-2;yy<=y+2;yy++)for(let xx=x-2;xx<=x+2;xx++){if(xx<0||yy<0||xx>=W||yy>=H)continue;const i=(yy*W+xx)*4;R+=img.data[i];G+=img.data[i+1];B+=img.data[i+2];n++;}
   R/=n;G/=n;B/=n; const hsv=rgb2hsv(R,G,B);
   if(hsv[1]<0.2){msg('色が薄すぎます（白・灰色・肌色に近い）。彩度の高いシールを使ってください。');return;}
-  const i=pickMode, m=markers[i]; m.col=hsv; m.pos={x,y}; m.lost=0;
+  const i=pickMode, m=markers[i], old={col:m.col,areaN:m.areaN}; m.col=hsv; m.areaN=null; m.pos={x,y}; m.lost=0; if(i===1)L0=null;
+  ensureBufs(); detectMarker(i);
+  if(!m.found||Math.hypot(m.pos.x-x,m.pos.y-y)>W*0.05){m.col=old.col;m.areaN=old.areaN;msg('その場所でシールを見つけられませんでした。シールの中央をタップしてください。');return;}
+  m.areaN=m.area/(W*H);
   $('sw'+i).style.background=`rgb(${R|0},${G|0},${B|0})`; saveSettings();
   if(i===0&&!markers[1].col){setPick(1);msg('肘頭を登録しました。次に尺骨マーカーをタップしてください。');}
   else{setPick(-1);msg(`${m.name}マーカーの色を登録しました。`+(curVideo&&curVideo.startAt!=null?'「合図から自動解析」を押してください。':'前腕中間位で「③ 0°に設定」を押してください。'));}
@@ -705,7 +746,7 @@ view.addEventListener('click',ev=>{
 });
 $('btnZero').onclick=()=>{
   if(!lastRaw.length||!markers[0].found||!markers[1].found){msg('2つのマーカーが検出されていません。');return;}
-  zero=circMean(lastRaw.slice(source==='file'&&video.paused?-1:0)); sm=null; prevT=null; buf=[]; resetStats();
+  const one=source==='file'&&video.paused; zero=circMean(lastRaw.slice(one?-1:0)); L0=mean(lastDist.slice(one?-1:0)); sm=null; prevT=null; buf=[]; resetStats();
   msg('0°を設定しました。外旋して「外旋」と出ない場合は「外旋の向きを反転」を押してください。');
   if(source==='file'&&video.paused)processPaused();
 };
@@ -729,7 +770,7 @@ async function stopRec(){
   const valid=rows.filter(r=>r[6]!=='').length, duration=rows[rows.length-1][0];
   const isVideo=source==='file', info=isVideo&&anaInfo?anaInfo:getInfo();
   const s={date:recStartWall,version:APP_VERSION,info,source:isVideo?'video':'realtime',videoName:isVideo?(curVideo&&curVideo.name?curVideo.name:curVideo&&curVideo.info?baseName(curVideo.info)+'.'+curVideo.ext:''):'',
-    settings:{smooth:+$('smooth').value,zero,sign,tolH:+$('tolH').value,thER:+$('thER').value,thBack:+$('thBack').value},
+    settings:{smooth:+$('smooth').value,zero,sign,L0,W,tolH:+$('tolH').value,thER:+$('thER').value,thBack:+$('thBack').value},
     summary:{maxER:stats.maxER==null?null:Math.max(0,stats.maxER),maxIR:stats.maxIR==null?null:Math.max(0,-stats.maxIR),
       rom:stats.maxER==null?null:Math.max(0,stats.maxER)+Math.max(0,-stats.maxIR),
       pvER:stats.pvER==null?null:Math.max(0,stats.pvER),pvIR:stats.pvIR==null?null:Math.max(0,-stats.pvIR),
